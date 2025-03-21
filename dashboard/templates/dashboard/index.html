@@ -1,0 +1,242 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block page_title %}
+    Dashboard | {{ settings.name }}
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/list.css" %}">
+    <link rel="stylesheet" href="{% static "css/deleteModal.css" %}">
+    <script defer src="{% static "js/tableActionsDropDown.js" %}"></script>
+
+    <style>
+        .dashboard-header{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            padding: 24px 0px;
+            border-bottom: 1px solid #d4d7da;
+            margin-bottom: 12px;
+
+           .dashboard-create-button{
+                display: flex;
+                gap: 8px;
+                font-size: 1.6rem;
+                font-family: inherit;
+                line-height: 1;
+                padding: 10px 12px;
+                border: none;
+                border-radius: 5px;
+                background-color: var(--primary-500);
+                color: var(--primary-0);
+                font-weight: 600;
+                transition: all 0.4s ease-out;
+                cursor: pointer;
+                &:hover{
+                    background-color: var(--primary-600);
+                }
+            }
+        }
+
+
+        .dashboard-main{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+
+            gap: 32px;
+        }
+
+        @media (max-width: 700px){
+            .dashboard-main{
+                grid-template-columns: 1fr ;
+            }
+        }
+
+        .top-box{
+            background-color: var(--primary-0);
+            border-radius: 7px;
+            box-shadow: 0px 2px 18px rgba(0,0,0,0.05);
+            border: 1px solid #d4d7da;
+            display: flex;
+            flex-direction: column;
+            .top-box-header{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 4px;
+                padding: 24px 28px;
+                border-bottom: 1px solid #d4d7da;
+                a{
+                    text-decoration: none;
+                    display: block;
+                    font-weight: 600;
+                    padding: 4px  12px;
+                    border-radius: 5px;
+                    color: #fff;
+                    background-color: var(--primary-500);
+                    transition: all 0.4s;
+                    &:hover{
+                        background-color: var(--primary-600);
+                    }
+                }
+                h2{
+                    color: #555;
+                }
+            }
+
+            .top-box-content{
+                .top-box-list{
+                    list-style: none;
+                    display: flex;
+                    flex-direction: column;
+                    font-weight: 600;
+
+                    li a{
+                        text-decoration: none;
+                        color: inherit;
+                        padding: 16px 28px;
+                        {#border-bottom: 1px solid #d4d7da;#}
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        gap: 8px;
+                        transition: all 0.4s;
+
+
+                        &:hover{
+                            background-color: var(--primary-100);
+                        }
+                        .contribution{
+                            padding: 4px 12px;
+                            border-radius: 1000px;
+                            background-color: var(--primary-50);
+                            color: var(--primary-600);
+                            font-weight: 500;
+                            text-transform: uppercase;
+                            display: flex;
+                            align-items: center;
+                            gap: 4px;
+                            span{
+                                letter-spacing: 1px;
+                                font-size: 1.2rem;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    {% include "messages.html" %}
+
+    <div class="dashboard-header">
+        <h1>Dashboard</h1>
+        {% if request.user|group:"Create" or request.user.is_superuser %}
+        <div class="actions-cell">
+            <button class="dashboard-create-button">
+                <i class="fa-solid fa-plus"></i>
+                Create
+            </button>
+            <div class="dropdown-menu">
+                {% if perms.clients.add_client %}
+                <a href="{% url 'create-client' %}" class="dropdown-item edit">
+                    <i class="fa-solid fa-user"></i>
+                    Client
+                </a>
+                {% endif %}
+                {% if perms.suppliers.add_supplier %}
+                <a href="{% url 'create-supplier' %}" class="dropdown-item edit">
+                    <i class="fa-solid fa-truck"></i>
+                    Supplier
+                </a>
+                {% endif %}
+            {% if perms.products.add_product %}
+                <a href="{% url 'create-product' %}" class="dropdown-item edit">
+                    <i class="fa-solid fa-boxes-stacked"></i>
+                    Product
+                </a>
+            {% endif %}
+            {% if perms.services.add_service %}
+                <a href="{% url 'create-service' %}" class="dropdown-item edit">
+                    <i class="fa-solid fa-headset"></i>
+                    Service
+                </a>
+            {% endif %}
+            {% if perms.invoices.add_invoiceout %}
+                <a href="{% url 'create-invoice' %}" class="dropdown-item edit">
+                    <i class="fa-solid fa-file-invoice-dollar"></i>
+                     Facture
+                </a>
+            {% endif %}
+             {% if perms.quotes.add_quoteout %}
+                <a href="{% url 'create-quote' %}" class="dropdown-item edit">
+                    <i class="fa-solid fa-file-invoice"></i>
+                     Devis
+                </a>
+            {% endif %}
+             {% if perms.purchase_orders.add_purchaseorderout %}
+                <a href="{% url 'create-purchase-order' %}" class="dropdown-item edit">
+                    <i class="fas fa-shopping-cart"></i>
+                     Bon de commande
+                </a>
+        {% endif %}
+            </div>
+        </div>
+    {% endif %}
+    </div>
+
+    <div class="dashboard-main">
+        <div class="top-box">
+           <div class="top-box-header">
+               <h2>Top Clients</h2>
+               <a href="{% url "clients-list" %}">See all</a>
+           </div>
+            <div class="top-box-content">
+               <ul class="top-box-list">
+                  {% for client in top_clients %}
+                      {% if client.contribution > 0 %}
+                          <li>
+                              <a href="{% url "invoices-list"%}?search={{ client.name }}">
+                                  <p>{{ client.name}} </p>
+                                  <p class="contribution"> {{client.contribution }} <span>Invoices</span></p>
+                              </a>
+                          </li>
+                      {% endif %}
+
+                   {% endfor %}
+               </ul>
+            </div>
+        </div>
+        <div class="top-box">
+            <div class="top-box-header">
+                <h2>Top Suppliers</h2>
+                <a href="{% url "suppliers-list" %}">See all</a>
+            </div>
+            <div class="top-box-content">
+                <ul class="top-box-list">
+                    {% for supplier in top_suppliers %}
+                        {% if supplier.contribution > 0 %}
+                        <li>
+                            <a href="{% url "purchase-orders-list"%}?search={{ supplier.name }}">
+                                <p>{{ supplier.name}} </p>
+                                <p class="contribution"> {{supplier.contribution }} <span>Purchase Orders</span></p>
+                            </a>
+                        </li>
+                         {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+
+    {% include "deleteModal.html" %}
+{% endblock %}
+
+

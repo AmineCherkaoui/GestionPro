@@ -1,0 +1,150 @@
+form {
+    display: flex;
+    gap: 24px;
+    width: 100%;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin: 0 auto;
+}
+
+form div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+form input, form textarea, form select,.select2-selection--single.select2-selection__rendered {
+    font-family: inherit;
+    max-width: 500px;
+    font-weight: 600;
+    outline: none;
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    transition: all 0.3s ease;
+}
+
+form input:focus-within, form textarea:focus-within, form select:focus-within {
+    border-color: var(--primary-500);
+    box-shadow: 0 0 4px var(--primary-500);
+    color: var(--primary-800);
+}
+
+form button {
+    text-decoration: none;
+    font-weight: 600;
+    padding: 8px 18px;
+    background: var(--primary-500);
+    border-radius: 4px;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: all 0.5s;
+}
+
+form button:hover {
+    background-color: var(--primary-600);
+}
+
+a {
+    text-decoration: none;
+    color: #444;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+ul.errorlist {
+    list-style: none;
+    background-color: #f2dede;
+    color: #a94442;
+    padding: 5px 16px;
+    border-radius: 5px;
+}
+
+div.error {
+    background-color: #f2dede;
+    color: #a94442;
+    width: 100%;
+}
+
+.errorlist.nonfield {
+    width: 100%;
+    align-self: end;
+}
+
+.invoice-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0px;
+    margin-top: 24px;
+}
+
+form button {
+    align-self: start;
+}
+
+#product-forms, #service-forms {
+    gap: 24px;
+}
+
+form .service-form, form .product-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    justify-items: start;
+    gap: 12px;
+    position: relative;
+}
+
+form .service-form div, form .product-form div {
+    width: 100%;
+}
+
+form .service-form button, form .product-form button {
+    top: 0;
+    right: 0;
+    position: absolute;
+    height: max-content;
+    background-color: transparent;
+    color: #a94442;
+}
+
+form .service-form button:hover, form .product-form button:hover {
+    background-color: #a94442;
+    color: #fff;
+}
+
+form .invoice-form {
+    display: flex;
+    flex-direction: row;
+}
+
+@media screen and (max-width: 600px) {
+    #product-forms, #service-forms {
+        align-items: start;
+        justify-content: flex-start;
+    }
+form .invoice-form{
+    flex-direction: column;
+}
+
+    form .service-form, form .product-form {
+        grid-template-columns: 1fr;
+    }
+
+    form .service-form div, form .product-form div {
+        width: 100%;
+    }
+
+    .errorlist.nonfield {
+        align-self: start;
+    }
+}
+

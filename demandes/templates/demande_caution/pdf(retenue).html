@@ -1,0 +1,157 @@
+{% load humanize %}
+{% load static %}
+{% load custom_filters %}
+
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Demande de caution de {{ demande_caution.type_caution|lower }}: N°{{ demande_caution.numero_marche }}</title>
+    <link rel="stylesheet" href="{% static "css/root.css" %}">
+    <style>
+
+        :root {
+            --primary-base: {{ settings.hue }};
+            --primary-saturation: {{ settings.saturation }}%;
+            --primary-0: #fff;
+            --primary-50: hsl(var(--primary-base), var(--primary-saturation), 95%);
+            --primary-100: hsl(var(--primary-base), var(--primary-saturation), 90%);
+            --primary-200: hsl(var(--primary-base), var(--primary-saturation), 80%);
+            --primary-300: hsl(var(--primary-base), var(--primary-saturation), 70%);
+            --primary-400: hsl(var(--primary-base), var(--primary-saturation), 60%);
+            --primary-500: hsl(var(--primary-base), var(--primary-saturation), 50%);
+            --primary-600: hsl(var(--primary-base), var(--primary-saturation), 40%);
+            --primary-700: hsl(var(--primary-base), var(--primary-saturation), 30%);
+            --primary-800: hsl(var(--primary-base), var(--primary-saturation), 20%);
+            --primary-900: hsl(var(--primary-base), var(--primary-saturation), 10%);
+        }
+
+        @page {
+            font-family: "Times New Roman", Helvetica, Arial, sans-serif;
+            margin: 3cm 2cm 2cm;
+
+            @top-left {
+                font-size: 10px;
+                content: "NOM OU DENOMINATION SOCIALE: {{ settings.name }}\A ADRESSE: {{ settings.address }}\A N° DE COMPTE: {{ settings.numero_de_compte }}";
+                white-space: pre;
+                font-weight: 500;
+                line-height: 1.6;
+            }
+
+            @top-right {
+                content: "{{ settings.location }} le: {{ demande_caution.date|date:"d/m/Y" }}";
+                font-size: 10px;
+            }
+
+        }
+
+        *, *::after, *::before {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            color: black;
+            font-family: "Times New Roman", Helvetica, Arial, sans-serif;
+            font-size: 11pt;
+            line-height: 1.2;
+        }
+
+        .header {
+            max-width: 250px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 16px auto;
+            font-weight: bold;
+            text-align: center;
+
+        }
+
+        .object {
+            margin-bottom: 16px;
+        }
+
+        .content {
+            line-height: 1.4;
+            display: block;
+
+
+            * {
+                margin-bottom: 16px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="header">
+    <p>Monsieur le Directeur de la BANQUE POPULAIRE DE RABAT KENITRA</p>
+</div>
+
+<div class="object"><em>Object:</em> <strong>Demande de caution de {{ demande_caution.type_caution|lower }}</strong></div>
+<div class="content">
+    <p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong> Monsieur le Directeur,</strong></p>
+    <p>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Nous vous serions très obligés de bien vouloir nous délivrer sous notre pleine et
+        entière responsabilité à votre égard, une caution de <strong style="text-transform: lowercase">{{ demande_caution.type_caution }} </strong>ci-après
+        détaillée :
+    </p>
+
+    <p>
+        <strong>Montant : {{ demande_caution.montant|montant_to_text }} ({{ demande_caution.montant|format_currency }} Dhs)</strong>
+    </p>
+
+
+    <p>
+        <strong> Administration intéressée : <span style="text-transform: uppercase">{{ demande_caution.administration_interessee }}</span></strong>
+    </p>
+
+    <p>
+        <strong> Nature des travaux : {{ demande_caution.nature_travaux }}
+        </strong>
+    </p>
+
+    <p><strong> N° du marché : {{ demande_caution.numero_marche }}</strong></p>
+
+    <p><strong>Nanti en faveur de la Banque Populaire de : Rabat Kénitra</strong></p>
+
+    <p><strong>En date du : {{ demande_caution.date|date:"d/m/Y" }}</strong></p>
+
+    <p><strong>Délai d’exécution du marché : {{ demande_caution.delai_execution_marche }}</strong></p>
+
+    <p><strong>Délai fixé pour la prononciation de la réception définitive
+        : {{ demande_caution.delai_prononciation_reception }}</strong></p>
+
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Il est bien entendu que votre caution sera rémunérée au taux en vigueur
+    </p>
+
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Nous vous autorisons d’ores et déjà, à constituer une provision au titre de la présente caution et ce, par
+        prélèvement sur notre compte n° : <strong>{{ settings.numero_de_compte }}</strong> ouvert sur vos livres.</p>
+
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Nous nous interdisons formellement de contester à votre égard le bien-fondé versements que vous pourriez être
+        amenés
+        a effectuer en vertu de la ladite caution retenue de garantie et vous donnons, d’ores et déjà ordre de débiter
+        notre
+        compte susvisé ou tout autre compte ouvert sur vos livres de toutes sommes qui seraient réclamées dans le cadre
+        de
+        la mise en jeu par le bénéficiaire de votre caution.</p>
+
+<p>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Au cas où notre (nos) compte (s) ne permet (tent) pas le paiement, nous nous engageons à verser immédiatement toutes
+    sommes réclamées par vos soins à ce titre et réglerons toutes sommes que vous aurez déboursées de ce chef.
+</p>
+
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Veuillez agréer, Monsieur le Directeur, l’expression de nos sentiments distingués.</p>
+
+
+    <p style="text-align: center"><strong>Signature</strong></p>
+
+</div>
+</body>
+</html>

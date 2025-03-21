@@ -1,0 +1,22 @@
+services:
+  db:
+    image: mysql:latest
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    env_file:
+      - .env.prod
+    restart: unless-stopped
+  web:
+    build: .
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+    env_file:
+      - .env.prod
+    restart: unless-stopped
+volumes:
+  mysql_data:
+

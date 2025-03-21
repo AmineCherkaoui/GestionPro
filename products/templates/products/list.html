@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block page_title %}
+    Produits List | {{ settings.name }}
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/root.css" %}">
+    <link rel="stylesheet" href="{% static "css/list.css" %}">
+    <link rel="stylesheet" href="{% static "css/deleteModal.css" %}">
+<script defer src="{% static "js/tableActionsDropDown.js" %}"></script>
+{% endblock %}
+
+{% block content %}
+    {% include "messages.html" %}
+
+    <div class="header">
+        <h1>Produits</h1>
+        {% if perms.products.add_product %}
+        <a class="btn-icon" href="{% url "create-product" %}">
+            <i class="fa-solid fa-plus"></i>
+            Add new
+        </a>
+    {% endif %}
+    </div>
+
+    <div class="list-container">
+        <form class="search-box" method="get" action="{% url 'products-list' %}">
+            <input type="text" name="search" placeholder="Search by name" value="{{ search | default:"" }}">
+            <button type="submit">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </form>
+
+          <div class="table-container">
+                <table>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>description</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    {% if perms.products.change_product or perms.products.delete_product %}
+                    <th>Actions</th>
+                    {% endif %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for product in products %}
+                    <tr>
+                        <td class="name">{{ product.name }}</td>
+                        <td>{{ product.description }}</td>
+                        <td>{{ product.price|format_currency }} MAD</td>
+                        <td>{{ product.quantity }}</td>
+                        {% if perms.products.change_product or perms.products.delete_product %}
+                        <td class="actions-cell">
+
+                            <button class="actions-button"> <i class="fa-solid fa-ellipsis-vertical"></i></button>
+                            <div class="dropdown-menu">
+
+                                {% if perms.products.change_product %}
+                                <a href="{% url 'edit-product' product.id %}" class="dropdown-item edit">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                    Edit
+                                </a>
+                                {% endif %}
+                                {% if perms.products.delete_product %}
+                                <form class="delete-form" action="{% url 'delete-product' product.id %}" method="post" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="button" class="dropdown-item delete" data-id="{{ product.id }}" data-name="{{ product.name }}">
+                                        <i class="fa-solid fa-trash"></i>
+                                        Delete
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </td>
+                            {% endif %}
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="100%">
+                            No product found.
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+          </div>
+
+        <div class="pagination">
+
+            {% if products.has_previous %}
+                <a class="pagination-link" href="?page={{ products.previous_page_number }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="pagination-icon prev-page">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </a>
+            {% endif %}
+
+            <p>
+                Page {{ products.number }} of {{ products.paginator.num_pages }}
+            </p>
+
+            {% if products.has_next %}
+                <a class="pagination-link" href="?page={{ products.next_page_number }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="pagination-icon next-page">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </a>
+            {% endif %}
+
+        </div>
+    </div>
+
+
+
+    {% include "deleteModal.html" %}
+{% endblock %}
+
+

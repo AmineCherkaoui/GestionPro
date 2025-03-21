@@ -1,0 +1,90 @@
+.messages {
+    margin: 10px 0;
+    position: absolute;
+    transition: 0.4s all;
+    top: 10px;
+    right: 24px;
+    z-index: 999;
+}
+
+.messages .alert {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
+    animation: from-right 0.5s;
+}
+
+.messages .alert button {
+    background-color: transparent;
+    border: none;
+    right: 12px;
+    cursor: pointer;
+}
+
+.messages .alert button svg {
+    width: 24px;
+    height: 24px;
+    stroke: currentColor;
+    fill: currentColor;
+}
+
+.messages .alert-success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+
+.messages .alert-success button svg {
+    color: #3c763d;
+}
+
+.messages .alert-error {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+
+.messages .alert-error button svg {
+    color: #a94442;
+}
+
+.messages .alert-warning {
+    color: #8a6d3b;
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+}
+
+.messages .alert-warning button svg {
+    color: #8a6d3b;
+}
+
+.messages .alert-info {
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+}
+
+.messages .alert-info button svg {
+    color: #31708f;
+}
+
+@media (max-width: 700px) {
+    .messages {
+        max-width: 90dvw;
+    }
+}
+
+@keyframes from-right {
+    0% {
+        transform: translate(1000px, 0px);
+    }
+    100% {
+        transform: translate(0px, 0px);
+    }
+}

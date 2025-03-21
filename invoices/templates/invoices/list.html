@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block page_title %}
+    Factures List | {{ settings.name }}
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/root.css" %}">
+    <link rel="stylesheet" href="{% static "css/list.css" %}">
+    <link rel="stylesheet" href="{% static "css/deleteModal.css" %}">
+    <script defer src="{% static "js/tableActionsDropDown.js" %}"></script>
+{% endblock %}
+
+{% block content %}
+    {% include "messages.html" %}
+
+    <div class="header">
+        <h1>Factures</h1>
+        {% if perms.invoices.add_invoiceout %}
+        <a class="btn-icon" href="{% url "create-invoice" %}">
+            <i class="fa-solid fa-plus"></i>
+            Add new
+        </a>
+     {% endif %}
+    </div>
+
+    <div class="list-container">
+        <form class="search-box" method="get" action="{% url 'invoices-list' %}">
+            <input type="text" name="search" placeholder="Search by name" value="{{ search | default:"" }}">
+            <button type="submit">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </form>
+
+        <div class="table-container">
+            <table>
+            <thead>
+            <tr>
+                <th>N°</th>
+                <th>Date</th>
+                <th>Client</th>
+                <th>Total HT</th>
+                <th>Total TTC</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for invoice in invoices %}
+                <tr>
+                    <td class="name">{{ invoice.id }}/OT/{{ invoice.date | date:"Y" }}</td>
+                    <td>{{ invoice.date }}</td>
+                    <td>{{ invoice.client }}</td>
+                    <td>{{ invoice.total_ht|format_currency }} MAD</td>
+                    <td>{{ invoice.total_ttc|format_currency }} MAD</td>
+                    <td class="actions-cell">
+                        <button class="actions-button"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                        <div class="dropdown-menu">
+                            <a href="{% url 'invoice-pdf' invoice.id %}" class="dropdown-item edit">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                Print
+                            </a>
+                            <a href="{% url 'invoice-detail' invoice.id %}" class="dropdown-item edit">
+                                <i class="fa-solid fa-ellipsis"></i>
+                                Details
+                            </a>
+
+                            {% if perms.invoices.delete_invoiceout %}
+                            <form class="delete-form" action="{% url 'delete-invoice' invoice.id %}" method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="button" class="dropdown-item delete" data-id="{{ invoice.id }}" data-name="{{ invoice.id }}/OT/{{ invoice.date|date:"Y" }}">
+                                    <i class="fa-solid fa-trash"></i>
+                                    Delete
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="100%">
+                        No invoice found.
+                    </td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+
+        </div>
+        <div class="pagination">
+
+            {% if invoices.has_previous %}
+                <a class="pagination-link" href="?page={{ invoices.previous_page_number }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="pagination-icon prev-page">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </a>
+            {% endif %}
+
+            <p>
+                Page {{ invoices.number }} of {{ invoices.paginator.num_pages }}
+            </p>
+
+            {% if invoices.has_next %}
+                <a class="pagination-link" href="?page={{ invoices.next_page_number }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="pagination-icon next-page">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </a>
+            {% endif %}
+
+        </div>
+    </div>
+
+
+
+    {% include "deleteModal.html" %}
+{% endblock %}
+
+

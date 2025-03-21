@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block page_title %}{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static "css/styles.css" %}">
+    <link rel="stylesheet" href="{% static "css/messages.css" %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script defer src="{% static "js/messages.js" %}"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+    :root {
+        --primary-base: {{ settings.hue }};
+        --primary-saturation: {{ settings.saturation }}%;
+
+
+        --primary-0:#fff;
+        --primary-50: hsl(var(--primary-base), var(--primary-saturation), 95%);
+        --primary-100: hsl(var(--primary-base), var(--primary-saturation), 90%);
+        --primary-200: hsl(var(--primary-base), var(--primary-saturation), 80%);
+        --primary-300: hsl(var(--primary-base), var(--primary-saturation), 70%);
+        --primary-400: hsl(var(--primary-base), var(--primary-saturation), 60%);
+        --primary-500: hsl(var(--primary-base), var(--primary-saturation), 50%);
+        --primary-600: hsl(var(--primary-base), var(--primary-saturation), 40%);
+        --primary-700: hsl(var(--primary-base), var(--primary-saturation), 30%);
+        --primary-800: hsl(var(--primary-base), var(--primary-saturation), 20%);
+        --primary-900: hsl(var(--primary-base), var(--primary-saturation), 10%);
+    }
+</style>
+    {% block css %}{% endblock %}
+
+</head>
+<body>
+<div class="layout">
+    {% include "navbar.html" %}
+    <main class="container">
+        {% block content %}
+        {% endblock %}
+    </main>
+</div>
+
+
+<script>
+    const sidebarToggle = document.querySelector(".sidebar-toggle")
+    const sidebar = document.querySelector(".sidebar")
+    const overlay = document.querySelector(".overlay")
+
+    sidebar.addEventListener("click", (event) => {
+        const toggleButton = event.target.closest(".nav-group");
+        if (!toggleButton) return;
+
+        const moreLinks = toggleButton.previousElementSibling;
+
+        document.querySelectorAll(".nav-group").forEach((group) => {
+            const groupMoreLinks = group.previousElementSibling;
+            if (group !== toggleButton) {
+                if (groupMoreLinks) {
+                    groupMoreLinks.classList.remove("active");
+                    group.querySelector(".sidebar-group-arrow").classList.remove("rotate-up");
+                } else {
+                    group.nextElementSibling.classList.remove("active");
+                    group.querySelector(".sidebar-group-arrow").classList.remove("rotate-down");
+                }
+            }
+        });
+
+        if (moreLinks) {
+            moreLinks.classList.toggle("active");
+            toggleButton.querySelector(".sidebar-group-arrow").classList.toggle("rotate-up");
+        } else {
+            toggleButton.nextElementSibling.classList.toggle("active");
+            toggleButton.querySelector(".sidebar-group-arrow").classList.toggle("rotate-down");
+        }
+    });
+
+
+
+    sidebarToggle.addEventListener("click", () => {
+        sidebar.classList.toggle("active")
+        overlay.classList.toggle("active")
+        sidebarToggle.classList.toggle("active")
+    })
+
+    overlay.addEventListener("click", () => {
+        sidebar.classList.remove("active")
+        overlay.classList.remove("active")
+        sidebarToggle.classList.remove("active")
+    })
+</script>
+</body>
+</html>

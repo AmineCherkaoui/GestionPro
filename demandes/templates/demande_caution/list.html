@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block page_title %}
+    Demande de caution | {{ settings.name }}
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/root.css" %}">
+    <link rel="stylesheet" href="{% static "css/list.css" %}">
+    <link rel="stylesheet" href="{% static "css/deleteModal.css" %}">
+    <script defer src="{% static "js/tableActionsDropDown.js" %}"></script>
+
+{% endblock %}
+
+{% block content %}
+    {% include "messages.html" %}
+
+    <div class="header">
+        <h1>Demandes de caution</h1>
+        {% if perms.demandes.add_demandecaution %}
+        <a class="btn-icon" href="{% url "create-demande-caution" %}">
+            <i class="fa-solid fa-plus"></i>
+            Add new
+        </a>
+    {% endif %}
+    </div>
+
+    <div class="list-container">
+        <form class="search-box" method="get" action="{% url 'demandes-caution-list' %}">
+            <input type="text" name="search" placeholder="Search by name" value="{{ search | default:"" }}">
+            <button type="submit">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </form>
+
+        <div class="table-container"><table>
+            <thead>
+            <tr>
+                <th>N°</th>
+                <th>Administration interesse</th>
+                <th>Montant</th>
+                <th>Type</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for demande_caution in demande_cautions %}
+                <tr>
+                    <td class="name">{% if demande_caution.type_caution == "Provisoire" %}{{ demande_caution.AON }}{% else %}{{ demande_caution.numero_marche }}{% endif %}</td>
+                    <td>{{ demande_caution.administration_interessee }}</td>
+                    <td>{{ demande_caution.montant|format_currency }} MAD</td>
+                    <td><p  class="type">{{ demande_caution.type_caution }}</p></td>
+                    <td class="actions-cell">
+                        <button class="actions-button">
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="{% url 'demande-caution-pdf' demande_caution.id %}" class="dropdown-item edit">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                Print
+                            </a>
+                            {% if perms.demandes.change_demandecaution %}
+
+                            <a href="{% url 'edit-demande-caution' demande_caution.id %}" class="dropdown-item edit">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                                Edit
+                            </a>
+                            {% endif %}
+                            {% if perms.demandes.delete_demandecaution %}
+                            <form class="delete-form" action="{% url 'delete-demande-caution' demande_caution.id %}" method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="button" class="dropdown-item delete" data-id="{{ demande_caution.id }}" data-name="{{ demande_caution.administration_interessee }}">
+                                    <i class="fa-solid fa-trash"></i>
+                                    Delete
+                                </button>
+                            </form>
+                        {% endif %}
+                        </div>
+
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="100%">
+                        Aucune demande de caution banquire trouvé
+                    </td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table></div>
+
+        <div class="pagination">
+
+            {% if demande_cautions.has_previous %}
+                <a class="pagination-link" href="?page={{ demande_cautions.previous_page_number }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="pagination-icon prev-page">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </a>
+            {% endif %}
+
+            <p>
+                Page {{ demande_cautions.number }} of {{ demande_cautions.paginator.num_pages }}
+            </p>
+
+            {% if demande_cautions.has_next %}
+                <a class="pagination-link" href="?page={{ demande_cautions.next_page_number }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="pagination-icon next-page">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </a>
+            {% endif %}
+
+        </div>
+    </div>
+
+
+
+
+    {% include "deleteModal.html" %}
+
+{% endblock %}
+
+

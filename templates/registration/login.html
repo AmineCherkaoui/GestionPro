@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login | {{ settings.name }}</title>
+    <link rel="stylesheet" href="{% static "css/styles.css" %}">
+    <link rel="stylesheet" href="{% static "css/login.css" %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        :root {
+            --primary-base: {{ settings.hue }};
+            --primary-saturation: {{ settings.saturation }}%;
+            --primary-0:#fff;
+            --primary-50: hsl(var(--primary-base), var(--primary-saturation), 95%);
+            --primary-100: hsl(var(--primary-base), var(--primary-saturation), 90%);
+            --primary-200: hsl(var(--primary-base), var(--primary-saturation), 80%);
+            --primary-300: hsl(var(--primary-base), var(--primary-saturation), 70%);
+            --primary-400: hsl(var(--primary-base), var(--primary-saturation), 60%);
+            --primary-500: hsl(var(--primary-base), var(--primary-saturation), 50%);
+            --primary-600: hsl(var(--primary-base), var(--primary-saturation), 40%);
+            --primary-700: hsl(var(--primary-base), var(--primary-saturation), 30%);
+            --primary-800: hsl(var(--primary-base), var(--primary-saturation), 20%);
+            --primary-900: hsl(var(--primary-base), var(--primary-saturation), 10%);
+        }
+
+    </style>
+</head>
+<body>
+
+
+    <form method="post" class="login-form">
+            {% if settings.logo %}
+        <div class="logo">
+            <img src="{{ settings.logo.url }}" alt="{{ settings.name }} LOGO">
+        </div>
+            {% else %}
+            <h1>LOGO</h1>
+            {% endif %}
+        {% if form.errors %}
+            <p class="error">incorrect username or password. Please try again.</p>
+        {% endif %}
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="fields">
+                <label >
+                    {{ field.label }}
+                    {{ field }}
+                </label>
+            </div>
+        {% endfor %}
+
+        <button type="submit">Login</button>
+    </form>
+
+
+
+
+<script>
+    document.querySelector("button").addEventListener("click",function(){
+        this.innerHTML='<i class="loading fa-solid fa-spinner"></i>'
+    })
+</script>
+
+</body>
+</html>

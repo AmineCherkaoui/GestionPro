@@ -1,0 +1,357 @@
+{% load humanize %}
+{% load static %}
+{% load custom_filters %}
+
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Facture: #{{ invoice.id }}/OT/{{ invoice.date | date:"Y" }}</title>
+    <link rel="stylesheet" href="{% static "css/root.css" %}">
+    <style>
+
+        :root {
+            --primary-base: {{ settings.hue }};
+            --primary-saturation: {{ settings.saturation }}%;
+
+
+            --primary-0: #fff;
+            --primary-50: hsl(var(--primary-base), var(--primary-saturation), 95%);
+            --primary-100: hsl(var(--primary-base), var(--primary-saturation), 90%);
+            --primary-200: hsl(var(--primary-base), var(--primary-saturation), 80%);
+            --primary-300: hsl(var(--primary-base), var(--primary-saturation), 70%);
+            --primary-400: hsl(var(--primary-base), var(--primary-saturation), 60%);
+            --primary-500: hsl(var(--primary-base), var(--primary-saturation), 50%);
+            --primary-600: hsl(var(--primary-base), var(--primary-saturation), 40%);
+            --primary-700: hsl(var(--primary-base), var(--primary-saturation), 30%);
+            --primary-800: hsl(var(--primary-base), var(--primary-saturation), 20%);
+            --primary-900: hsl(var(--primary-base), var(--primary-saturation), 10%);
+        }
+
+        @page {
+            margin: 2cm;
+
+            @top-left {
+                content: "";
+            }
+            @top-left::after {
+            content: "";
+            width: 120px;
+            height: auto;
+            background-image: url('{{ settings.logo.url }}');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+            @top-center {
+                content: "Facture";
+                font-weight: bold;
+                color: var(--primary-500);
+                font-size: 14pt;
+                text-transform: uppercase;
+            }
+
+            @top-right {
+                content: "{{ settings.location }}, {{ invoice.date|date:"d/m/Y" }}";
+                font-size: 10pt;
+            }
+
+
+
+
+            @bottom-right-corner {
+                content: " ";
+                background-color: var(--primary-50);
+            }
+            @bottom-left-corner {
+                content: " ";
+                background-color: var(--primary-50);
+            }
+            @bottom-center {
+                background-color: var(--primary-50);
+                color: var(--primary-500);
+                content: '{{settings.type_de_societe|add_dots}}. au Capital de {{ settings.capital|format_currency }}{% if settings.rc %} - R.C. {{ settings.rc }}{% endif %}{% if settings.patente %} - Patente: {{ settings.patente }}{% endif %}{% if settings.IF %} - IF: {{ settings.IF }}{% endif %}{% if settings.cnss %} - CNSS: {{ settings.cnss }}{% endif %}{% if settings.ice %} - ICE: {{ settings.ice }}{% endif %}{% if settings.address %} - Siège Social: {{ settings.address }}{% endif %}{% if settings.tel %} - Tél. {{ settings.tel }}{% endif %}{% if settings.fax %} - Fax: {{ settings.fax }}{% endif %}';
+                font-size: 7pt;
+                font-weight: 600;
+
+            }
+        }
+
+        *, *::after, *::before {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            color: #14213d;
+            font-family: Arial, sans-serif;
+            font-size: 10pt;
+            line-height: 1.4;
+        }
+
+        body {
+            margin: 0;
+        }
+
+        h1 {
+            color: var(--primary-500);
+            font-size: 11pt;
+            margin: 0;
+        }
+
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            margin: 1.2em 0 2em;
+            z-index: 100;
+        }
+
+
+        header address#to {
+            font-style: normal;
+            white-space: pre-line;
+            line-height: 1.4;
+
+            .bill-to {
+                font-weight: bolder;
+                color: var(--primary-500);
+                text-transform: uppercase;
+
+            }
+
+        }
+
+
+        dl {
+            position: absolute;
+            right: 0;
+            text-align: right;
+            top: 0;
+        }
+
+        dt, dd {
+            display: inline;
+            margin: 0;
+        }
+
+        dt {
+            color: #a9a;
+        }
+
+        dt::before {
+            content: '';
+            display: block;
+        }
+
+        dt::after {
+            content: ':';
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th {
+
+            color: #fff;
+            background-color: var(--primary-500);
+            font-weight: 600;
+            padding: .25cm;
+            text-transform: uppercase;
+        }
+
+
+        td {
+            padding: 12px 8px;
+
+
+        }
+
+        td:last-of-type {
+            font-weight: bold;
+            text-align: right;
+        }
+
+        th, td {
+            text-align: center;
+        }
+
+        th:first-of-type, td:first-of-type {
+            text-align: left;
+        }
+
+        th:last-of-type, td:last-of-type {
+            text-align: right;
+        }
+
+        footer {
+            content: '';
+            display: block;
+            height: 6cm;
+        }
+
+        table#total {
+            background: #f6f6f6;
+            border-color: #f6f6f6;
+            border-style: solid;
+            border-width: 2cm 3cm;
+            bottom: 0;
+            margin: 0 -3cm;
+            position: absolute;
+            width: 18cm;
+        }
+
+        tfoot tr {
+            &:last-child {
+                font-weight: bold;
+            }
+        }
+
+        .item-info {
+            display: flex;
+            flex-direction: column;
+
+            .name {
+                margin-bottom: 0px;
+                line-height: 1;
+            }
+
+            .description {
+                font-size: 10px;
+                color: #888;
+            }
+        }
+
+        .header-box {
+            display: flex;
+            justify-content: space-between;
+            flex-direction: column;
+
+            img {
+                width: 200px;
+            }
+        }
+
+        .table-container {
+            border-radius: 4px;
+            overflow: hidden;
+
+        }
+
+        .pdf-number {
+            text-align: center;
+
+            margin-bottom: 12px;
+        }
+
+        .total-ttc {
+            font-weight: 600;
+
+            & *:nth-child(2) {
+                background-color: var(--primary-50);
+            }
+
+            & *:nth-child(3) {
+                background-color: var(--primary-50);
+                color: var(--primary-500);
+            }
+        }
+
+        .footer-box{
+            font-size: 9pt;
+        }
+
+        .total-text{
+            margin: 2em 0;
+
+        }
+    </style>
+</head>
+
+<body>
+
+
+<header>
+
+    <address id="to">
+        <span class="bill-to">facturer à</span>
+        <strong> {{ invoice.client.name }}</strong>
+        <strong>{{ invoice.client.address }}</strong>
+        ICE: {{ invoice.client.ice }}
+    </address>
+</header>
+
+
+<p class="pdf-number"><strong>Facture N°: {{ invoice.id }}/OT/{{ invoice.date|date:"Y" }}</strong></p>
+<table>
+    <thead>
+    <tr>
+        <th>Nom</th>
+        <th>Prix HT</th>
+        <th>quantité</th>
+        <th>Total HT</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for item in products %}
+        <tr>
+            <td class="item-info">
+                <p class="name">{{ item.product.name }}</p>
+                <p class="description">{{ item.product.description }}</p>
+            </td>
+            <td>{{ item.price_at_invoice|format_currency }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.price_at_invoice|multiply:item.quantity|format_currency }}</td>
+        </tr>
+    {% endfor %}
+
+    {% for item in services %}
+        <tr>
+            <td class="item-info">
+                <p class="name">{{ item.service.name }}</p>
+                <p class="description">{{ item.service.description }}</p>
+            </td>
+            <td>{{ item.price_at_invoice|format_currency }}</td>
+            <td>{{ item.quantity|default:1 }}</td>
+            <td>{{ item.price_at_invoice|multiply:item.quantity|format_currency }}</td>
+        </tr>
+    {% endfor %}
+
+    <tr>
+        <td colspan="2"></td>
+        <td>Total HT</td>
+        <td>{{ invoice.total_ht|format_currency }}</td>
+    </tr>
+    <tr>
+        <td colspan="2"></td>
+        <td>TVA 20%</td>
+        <td>{{ invoice.total_tva|format_currency }}</td>
+    </tr>
+    <tr class="total-ttc">
+        <td colspan="2"></td>
+        <td>Total TTC</td>
+        <td>{{ invoice.total_ttc|format_currency }}</td>
+    </tr>
+    </tbody>
+</table>
+
+<div class="footer-box">
+    <div class="total-text">
+        <p>Arrêté le présente facture à la somme toutes taxes comprise de :</p>
+        <p><strong>{{ invoice.total_ttc|montant_to_text}}</strong></p>
+    </div>
+
+    <div class="banque-info">
+        <p><strong>{{ settings.bank_name }}</strong>, RIB: <strong>{{ settings.rib|format_rib }}</strong></p>
+    </div>
+</div>
+
+
+
+
+</body>
+</html>

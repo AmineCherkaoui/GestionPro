@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}
+    {% if form.instance.id %}Edit | {{ form.instance.name }}{% else %}Demande de caution{% endif %} |
+    {{ settings.name }}
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/form.css" %}">
+{% endblock %}
+
+
+{% block content %}
+    <a class="btn-back" href="{% url 'demandes-caution-list' %}">
+        <?xml version="1.0" encoding="UTF-8"?>
+        <svg width="16px" height="16px" viewBox="0 0 24 24" stroke-width="1.5" fill="none"
+             xmlns="http://www.w3.org/2000/svg" color="#000000">
+            <path d="M21 12L3 12M3 12L11.5 3.5M3 12L11.5 20.5" stroke="#000000" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        Back
+    </a>
+    <h1>{% if form.instance.id %}Edit {% else %}Demande de caution{% endif %}</h1>
+    {% include "messages.html" %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_div }}
+        <button type="submit">Save</button>
+    </form>
+
+    <script>
+
+            const typeCaution = document.getElementById('id_type_caution');
+            const AON = document.getElementById('id_AON').parentElement;
+            const numeroMarche = document.getElementById('id_numero_marche').parentElement;
+            const delaiExecution = document.getElementById('id_delai_execution_marche').parentElement;
+            const delaiPrononciation = document.getElementById('id_delai_prononciation_reception').parentElement;
+            const toggle=()=>{
+                if (typeCaution.value === 'Provisoire') {
+                    AON.style.display = 'flex';
+                    numeroMarche.style.display = 'none';
+                    delaiExecution.style.display = 'none';
+                    delaiPrononciation.style.display = 'none';
+                } else {
+                    AON.style.display = 'none';
+                    numeroMarche.style.display = 'flex';
+                    delaiExecution.style.display = 'flex';
+                    delaiPrononciation.style.display = 'flex';
+                }
+            }
+
+            toggle()
+            typeCaution.addEventListener('change',toggle);
+
+
+
+    </script>
+{% endblock %}

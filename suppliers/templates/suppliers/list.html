@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}
+    Fournisseurs List | {{ settings.name }}
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/root.css" %}">
+    <link rel="stylesheet" href="{% static "css/list.css" %}">
+    <link rel="stylesheet" href="{% static "css/deleteModal.css" %}">
+    <script defer src="{% static "js/tableActionsDropDown.js" %}"></script>
+{% endblock %}
+
+{% block content %}
+    {% include "messages.html" %}
+
+    <div class="header">
+        <h1>Fournisseurs</h1>
+        {% if perms.suppliers.add_supplier %}
+        <a class="btn-icon" href="{% url "create-supplier" %}">
+            <i class="fa-solid fa-plus"></i>
+            Add new
+        </a>
+        {% endif %}
+    </div>
+
+    <div class="list-container">
+        <form class="search-box" method="get" action="{% url 'suppliers-list' %}">
+            <input type="text" name="search" placeholder="Search by name" value="{{ search | default:"" }}">
+            <button type="submit">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </form>
+
+          <div class="table-container">  <table>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Phone</th>
+                    <th>ICE</th>
+                    {% if perms.suppliers.change_supplier or perms.suppliers.delete_supplier  %}
+                        <th>Actions</th>
+                    {% endif %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for supplier in suppliers %}
+                    <tr>
+                        <td class="name">{{ supplier.name }}</td>
+                        <td>{{ supplier.address }}</td>
+                        <td>{{ supplier.phone }}</td>
+                        <td>{{ supplier.ice }}</td>
+
+                        {% if perms.suppliers.change_supplier or perms.suppliers.delete_supplier  %}
+                            <td class="actions-cell">
+                                <button class="actions-button"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                <div class="dropdown-menu">
+                                    {% if perms.suppliers.change_supplier %}
+                                        <a href="{% url 'edit-supplier' supplier.id %}" class="dropdown-item edit">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                            Edit
+                                        </a>
+                                    {% endif %}
+
+                                    {% if perms.suppliers.delete_supplier %}
+                                        <form class="delete-form" action="{% url 'delete-supplier' supplier.id %}" method="post" style="display: inline;">
+                                            {% csrf_token %}
+                                            <button type="button" class="dropdown-item delete" data-id="{{ supplier.id }}" data-name="{{ supplier.name }}">
+                                                <i class="fa-solid fa-trash"></i>
+                                                Delete
+                                            </button>
+                                        </form>
+                                    {% endif %}
+
+
+                                </div>
+                            </td>
+                        {% endif %}
+
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="100%">
+                            No supplier found.
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table></div>
+
+        <div class="pagination">
+
+            {% if suppliers.has_previous %}
+                <a class="pagination-link" href="?page={{ suppliers.previous_page_number }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="pagination-icon prev-page">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </a>
+            {% endif %}
+
+            <p>
+                Page {{ suppliers.number }} of {{ suppliers.paginator.num_pages }}
+            </p>
+
+            {% if suppliers.has_next %}
+                <a class="pagination-link" href="?page={{ suppliers.next_page_number }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="pagination-icon next-page">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </a>
+            {% endif %}
+
+        </div>
+    </div>
+
+{% include "deleteModal.html" %}
+{% endblock %}
+
+

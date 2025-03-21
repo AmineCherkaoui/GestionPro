@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}
+    Parametres
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/form.css" %}">
+    <link href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
+    <style>
+
+        .logo-preview {
+            display: flex;
+            cursor: pointer;
+            border: 1px solid #aaa;
+            max-width: max-content;
+            padding: 4px;
+            background-color: #fff;
+
+            #no-logo{
+                cursor: pointer;
+            }
+        }
+        .logo-preview img {
+            max-width: 100px;
+            height: auto;
+            border-radius: 4px;
+        }
+        #color-picker {
+            margin: 20px 0;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <a class="btn-back" href="{% url 'dashboard' %}">
+        <?xml version="1.0" encoding="UTF-8"?><svg width="16px" height="16px" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000"><path d="M21 12L3 12M3 12L11.5 3.5M3 12L11.5 20.5" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        Back
+    </a>
+    <h1>Parametres</h1>
+    {% include "messages.html" %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+
+        <div class="logo-preview">
+            <label for="id_logo" class="file-input-label">
+                {% if settings.logo %}
+                    <img id="current-logo" src="{{ settings.logo.url }}" alt="Current Logo">
+                {% else %}
+                    <p id="no-logo">Upload your logo.</p>
+                {% endif %}
+                <div class="file-input-wrapper">
+                    <input type="file" name="logo" id="id_logo" accept="image/*" style="display: none;">
+                </div>
+            </label>
+        </div>
+
+        {% for field in form %}
+            {% if field.name != 'logo' and field.name != "hue" and field.name != "saturation" %}
+                <div>
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="error">{{ field.errors }}</div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% endfor %}
+
+
+        <label for="id_color">
+            Color:
+            <div id="color-picker"></div>
+            <input hidden="hidden" type="float" id="id_hue" name="hue" value="{{ settings.hue }}">
+            <input hidden="hidden" type="float" id="id_saturation" name="saturation" value="{{ settings.saturation }}">
+        </label>
+
+
+        <button type="submit">Save</button>
+    </form>
+
+    <script>
+
+        document.getElementById('id_logo').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.getElementById('current-logo');
+                    if (img) {
+                        img.src = e.target.result;
+                    } else {
+                        const noLogo = document.getElementById('no-logo');
+                        if (noLogo) {
+                            noLogo.innerHTML = `<img id="current-logo" src="${e.target.result}" alt="Selected Logo" style="max-width: 100px; height: auto; border: 1px solid #ccc; border-radius: 4px;">`;
+                        }
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        const hueValue = '{{ settings.hue}}';
+        const saturationValue="{{ settings.saturation}}"
+
+        const defaultColor = `hsl(${hueValue}, ${saturationValue}%, 50%)`;
+
+        const pickr = Pickr.create({
+            el: '#color-picker',
+            theme: 'classic',
+            default: defaultColor,
+            swatches: [
+                'hsla(340, 82%, 52%, 1)',
+                'hsla(291, 64%, 42%, 1)',
+                'hsla(262, 52%, 47%, 1)',
+                'hsla(244, 50%, 51%, 1)',
+                'hsla(231, 48%, 48%, 1)',
+                'hsla(207, 90%, 54%, 1)',
+                'hsla(199, 98%, 48%, 1)',
+                'hsla(187, 50%, 42%, 1)',
+                'hsla(174, 50%, 29%, 1)',
+                'hsla(122, 39%, 49%, 1)',
+                'hsla(88, 50%, 50%, 1)',
+                'hsla(60, 50%, 50%, 1)',
+                'hsla(45, 80%, 51%, 1)',
+                'hsla(30, 80%, 51%, 1)',
+                'hsla(4, 80%, 58%, 1)',
+            ],
+            components: {
+                preview: true,
+                hue: true,
+                interaction: {
+                    input: true,
+                }
+            }
+        });
+
+
+        pickr.on('change', (color) => {
+
+            const hsla = color.toHSLA();
+            const hue = hsla[0];
+            const saturation=hsla[1]
+            const pickrButton = document.querySelector('.pcr-button');
+            if (pickrButton) {
+                pickrButton.style=`--pcr-color:${color.toRGBA()}`
+            }
+            document.getElementById('id_hue').value = hue;
+            document.getElementById('id_saturation').value = saturation;
+        });
+    </script>
+{% endblock %}

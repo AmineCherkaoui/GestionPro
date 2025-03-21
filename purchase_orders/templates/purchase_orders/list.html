@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block page_title %}
+    Bon de commandes List | {{ settings.name }}
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/root.css" %}">
+    <link rel="stylesheet" href="{% static "css/list.css" %}">
+    <link rel="stylesheet" href="{% static "css/deleteModal.css" %}">
+    <script defer src="{% static "js/tableActionsDropDown.js" %}"></script>
+{% endblock %}
+
+{% block content %}
+    {% include "messages.html" %}
+
+    <div class="header">
+        <h1>Bon de commandes</h1>
+        {% if perms.purchase_orders.add_purchaseorderout %}
+        <a class="btn-icon" href="{% url "create-purchase-order" %}">
+            <i class="fa-solid fa-plus"></i>
+            Add new
+        </a>
+     {% endif %}
+    </div>
+
+    <div class="list-container">
+        <form class="search-box" method="get" action="{% url 'purchase-orders-list' %}">
+            <input type="text" name="search" placeholder="Search by name" value="{{ search | default:"" }}">
+            <button type="submit">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </form>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                <tr>
+                    <th>N°</th>
+                    <th>Date</th>
+                    <th>Supplier</th>
+                    <th>Total HT</th>
+                    <th>Total TTC</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for purchase_order in purchase_orders %}
+                    <tr>
+                        <td class="name">{{ purchase_order.id }}/OT/{{ purchase_order.date | date:"Y" }}</td>
+                        <td>{{ purchase_order.date }}</td>
+                        <td>{{ purchase_order.supplier }}</td>
+                        <td>{{ purchase_order.total_ht|format_currency }} MAD</td>
+                        <td>{{ purchase_order.total_ttc|format_currency }} MAD</td>
+
+
+                            <td class="actions-cell">
+                                <button class="actions-button"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                <div class="dropdown-menu">
+                                    <a href="{% url 'purchase-order-pdf' purchase_order.id %}"
+                                       class="dropdown-item edit">
+                                        <i class="fa-solid fa-file-pdf"></i>
+                                        Print
+                                    </a>
+                                    <a href="{% url 'purchase-order-detail' purchase_order.id %}"
+                                       class="dropdown-item edit">
+                                        <i class="fa-solid fa-ellipsis"></i>
+
+                                        Details
+                                    </a>
+
+
+                                    {% if perms.purchase_orders.delete_purchaseorderout %}
+                                        <form class="delete-form"
+                                              action="{% url 'delete-purchase-order' purchase_order.id %}" method="post"
+                                              style="display: inline;">
+                                            {% csrf_token %}
+                                            <button type="button" class="dropdown-item delete"
+                                                    data-id="{{ purchase_order.id }}"
+                                                    data-name="{{ purchase_order.id }}/OT/{{ purchase_order.date|date:"Y" }}">
+                                                <i class="fa-solid fa-trash"></i>
+                                                Delete
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </td>
+
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="100%">
+                            No purchase order found.
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination">
+
+            {% if purchase_orders.has_previous %}
+                <a class="pagination-link" href="?page={{ purchase_orders.previous_page_number }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="pagination-icon prev-page">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </a>
+            {% endif %}
+
+            <p>
+                Page {{ purchase_orders.number }} of {{ purchase_orders.paginator.num_pages }}
+            </p>
+
+            {% if purchase_orders.has_next %}
+                <a class="pagination-link" href="?page={{ purchase_orders.next_page_number }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="pagination-icon next-page">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </a>
+            {% endif %}
+
+        </div>
+    </div>
+
+
+
+    {% include "deleteModal.html" %}
+{% endblock %}
+
+

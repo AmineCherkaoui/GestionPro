@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}
+    {% if form.instance.id %}Edit Utilisateur {{ form.instance.name }}{% else %} Creation Utilisateur{% endif %} |
+    {{ settings.name }}
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/form.css" %}">
+    <style>
+        .helptext{
+            color: #a94442;
+            padding: 0.8rem 0.4rem;
+            display: none;
+        }
+        .permissions-container {
+            display: flex;
+            flex-direction: column;
+            margin-top: 12px;
+            background-color: #fff;
+            border-radius: 7px;
+            border: 1px solid #d4d7da;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.0.5);
+            width: 100%;
+            max-width: max-content;
+        }
+        .permissions-container h2 {
+            padding: 24px;
+            border-bottom: 1px solid #d4d7da;
+        }
+        .permissions-checkboxes {
+            padding: 24px;
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            align-content: center;
+            gap: 24px;
+            font-weight: 600;
+
+        }
+        .permissions-checkboxes label {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1.5rem;
+            background-color: #ddd;
+            padding: 8px 24px;
+            border-radius: 1000px;
+            transition: all 0.4s;
+            cursor: pointer;
+            opacity: 0.5;
+        }
+        .permissions-checkboxes label.superuser:has(input:checked) {
+            background-color: #fffad7;
+            color: #8a6d3b;
+            opacity: 1;
+        }
+        .permissions-checkboxes label.create:has(input:checked) {
+            background-color: #dff0d8;
+            color: #3c763d;
+            opacity: 1;
+        }
+        .permissions-checkboxes label.update:has(input:checked) {
+            background-color: #d9edf7;
+            color: #31708f;
+            opacity: 1;
+        }
+        .permissions-checkboxes label.delete:has(input:checked) {
+            background-color: #f2dede;
+            color: #a94442;
+            opacity: 1;
+        }
+
+        .permissions-checkboxes input[type="checkbox"] {
+            display: none;
+
+        }
+
+        @media (max-width: 700px){
+            .permissions-container{
+                max-width: 500px;
+            }
+            .permissions-checkboxes{
+
+            grid-template-columns: repeat(2,1fr);
+            }
+        }
+
+        div.error{
+            max-width: 500px;
+            border-radius: 12px;
+        }
+    </style>
+{% endblock %}
+
+
+{% block content %}
+    <a class="btn-back" href="{% url 'users-list' %}">
+        <?xml version="1.0" encoding="UTF-8"?>
+        <svg width="16px" height="16px" viewBox="0 0 24 24" stroke-width="1.5" fill="none"
+             xmlns="http://www.w3.org/2000/svg" color="#000000">
+            <path d="M21 12L3 12M3 12L11.5 3.5M3 12L11.5 20.5" stroke="#000000" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        Back
+    </a>
+    <h1>{% if form.instance.id %}Edit utilisateur {% else %}Creation utilisateur{% endif %}</h1>
+    {% include "messages.html" %}
+    <form method="post">
+        {% csrf_token %}
+
+        <section class="permissions-container">
+            <h2>Permissions</h2>
+            <section class="permissions-checkboxes">
+                <label class="create">
+                    Create
+                    <input type="checkbox" name="ALL_ADD" {% if form.ALL_ADD.value %}checked{% endif %}>
+                </label>
+                <label class="update">
+                    Update
+                    <input type="checkbox" name="ALL_CHANGE" {% if form.ALL_CHANGE.value %}checked{% endif %}>
+                </label>
+                <label class="delete">
+                    Delete
+                    <input type="checkbox" name="ALL_DELETE" {% if form.ALL_DELETE.value %}checked{% endif %}>
+                </label>
+                <label class="superuser">
+                    <input type="checkbox" name="is_superuser" {% if form.instance.is_superuser %}checked{% endif %}>
+                    <span>Superuser</span>
+                </label>
+            </section>
+        </section>
+        {% for field in form %}
+            {% if field.name != 'ALL_ADD' and field.name != "ALL_DELETE" and field.name != "ALL_CHANGE" and field.name != "is_superuser" %}
+                <div>
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="error">{{ field.errors }}</div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% endfor %}
+
+
+
+        <button type="submit">Save</button>
+    </form>
+{% endblock %}

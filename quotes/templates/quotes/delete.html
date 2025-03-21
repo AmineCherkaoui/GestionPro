@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}
+    Delete | {{ quote.id }}/OT/{{ quote.date | date:"Y"}}
+{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static "css/deleteModal.css" %}">
+{% endblock %}
+
+
+{% block content %}
+       <a class="btn-back" href="{% url 'quotes-list' %}">
+        <?xml version="1.0" encoding="UTF-8"?><svg width="16px" height="16px" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000"><path d="M21 12L3 12M3 12L11.5 3.5M3 12L11.5 20.5" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        Back
+    </a>
+<h1>Delete Quote</h1>
+<p>Are you sure you want to delete "<strong>{{ quote.id }}/OT/{{ quote.date | date:"Y"}}</strong>"<?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Yes, delete</button>
+</form>
+
+{% endblock %}

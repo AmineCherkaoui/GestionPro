@@ -1,0 +1,162 @@
+
+
+{% extends "base.html" %}
+{% load static %}
+{% load custom_filters %}
+{% load humanize %}
+
+{% block page_title %}
+    Bon de commande #{{ purchase_order.id }}/OT/{{ purchase_order.date | date:"Y" }}
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/list.css" %}">
+    <link rel="stylesheet" href="{% static "css/messages.css" %}">
+    <link rel="stylesheet" href="{% static "css/deleteModal.css" %}">
+
+{% endblock %}
+
+{% block content %}
+    <a class="btn-back" href="{% url 'purchase-orders-list' %}">
+        <?xml version="1.0" encoding="UTF-8"?>
+        <svg width="16px" height="16px" viewBox="0 0 24 24" stroke-width="1.5" fill="none"
+             xmlns="http://www.w3.org/2000/svg" color="#000000">
+            <path d="M21 12L3 12M3 12L11.5 3.5M3 12L11.5 20.5" stroke="#000000" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        Back
+    </a>
+    {% include "messages.html" %}
+
+    <div class="details-container">
+        <header class="header">
+            <div class="details-info">
+                <h1>Bon de commande #{{ purchase_order.id }}/OT/{{ purchase_order.date | date:"Y" }}</h1>
+                <p><strong>{{ purchase_order.supplier.name }}</strong></p>
+                <p><strong>{{ purchase_order.supplier.address }}</strong></p>
+                <p><strong>ICE: {{ purchase_order.supplier.ice }}</strong></p>
+                <p><strong>Date: </strong> {{ purchase_order.date }}</p>
+            </div>
+            <a class="btn-icon" href="{% url "purchase-order-pdf" purchase_order.id %}">
+                <i class="fa-solid fa-file-pdf"></i>
+                <p>Print</p>
+            </a>
+        </header>
+
+        <div>
+            <div class="products-details-header">
+                <h2>Products</h2>
+                {% if perms.purchase_orders.change_purchaseorderout %}
+                <a class="btn-icon" href="{% url "purchase-order-add-product" purchase_order.id %}">
+                    <i class="fa-solid fa-plus"></i>
+                    <p>Add</p>
+                </a>
+                {% endif %}
+            </div>
+           <div class="table-container"> <table>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Quantity</th>
+                    <th>Price per unit</th>
+                    <th>Total</th>
+                    {% if perms.purchase_orders.change_purchaseorderout %}
+                    <th>Actions</th>
+                    {%endif%}
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in products %}
+                    <tr>
+                        <td class="name">{{ item.product.name }}</td>
+                        <td>{{ item.product.description }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.price_at_purchase_order|format_currency }} MAD</td>
+                        <td>{{ item.price_at_purchase_order|multiply:item.quantity|format_currency }} MAD</td>
+                        {% if perms.purchase_orders.change_purchaseorderout %}
+                        <td>
+                            <form class="delete-form" action="{% url 'purchase-order-delete-product' purchase_order.id item.id %}" method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="button" class="dropdown-item delete" data-id="{{ item.product.id }}" data-name="{{item.product.name}}">
+                                    <i class="fa-solid fa-trash"></i>
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
+                    {% endif %}
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="6">No products found.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table></div>
+        </div>
+
+        <div>
+            <div class="services-details-header">
+                <h2>Services</h2>
+                {% if perms.purchase_orders.change_purchaseorderout %}
+                <a class="btn-icon" href="{% url "purchase-order-add-service" purchase_order.id %}">
+                    <i class="fa-solid fa-plus"></i>
+                    <p>Add</p>
+                </a>
+                {% endif %}
+            </div>
+            <div class="table-container"><table>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Quantity</th>
+                    <th>Price per unit</th>
+                    <th>Total</th>
+                    {% if perms.purchase_orders.change_purchaseorderout %}
+                    <th>Actions</th>
+                    {% endif %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in services %}
+                    <tr>
+                        <td class="name">{{ item.service.name }}</td>
+                        <td>{{ item.service.description }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.price_at_purchase_order|format_currency }} MAD</td>
+                        <td>{{ item.price_at_purchase_order|multiply:item.quantity|format_currency }} MAD</td>
+                        {% if perms.purchase_orders.change_purchaseorderout %}
+                       <td>
+                           <form class="delete-form" action="{% url 'purchase-order-delete-service' purchase_order.id item.id %}" method="post" style="display: inline;">
+                               {% csrf_token %}
+                               <button type="button" class="dropdown-item delete" data-id="{{ item.service.id }}" data-name="{{item.service.name}}">
+                                   <i class="fa-solid fa-trash"></i>
+                                   Delete
+                               </button>
+                           </form>
+                        </td>
+                        {% endif %}
+
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="6">No services found.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table></div>
+        </div>
+
+        <div class="details-totals">
+            <p><strong>Total HT:</strong> {{ purchase_order.total_ht|format_currency }} MAD</p>
+            <p><strong>TVA 20%:</strong> {{ purchase_order.total_tva|format_currency }} MAD</p>
+            <p><strong>Total TTC:</strong> {{ purchase_order.total_ttc|format_currency }} MAD</p>
+        </div>
+    </div>
+    {% include "deleteModal.html" %}
+    <script  src="{% static "js/messages.js" %}"></script>
+
+{% endblock %}
+
+

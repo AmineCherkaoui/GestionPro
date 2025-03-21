@@ -1,0 +1,45 @@
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <h1 class="modal-content-title">Delete</h1>
+        <p>Are you sure you want to delete?</p>
+        <div class="modal-actions">
+            <button id="cancelDelete" class="btn-cancel">Cancel</button>
+            <button id="confirmDelete" class="btn-delete">Delete</button>
+        </div>
+    </div>
+</div>
+<script>
+
+    const modal = document.getElementById("deleteModal");
+    const cancelButton = document.getElementById("cancelDelete");
+    const confirmButton = document.getElementById("confirmDelete");
+    let deleteForm = null;
+
+
+    document.querySelectorAll(".dropdown-item.delete").forEach((deleteButton) => {
+        deleteButton.addEventListener("click", function (e) {
+            e.preventDefault();
+            const dataId = this.getAttribute("data-id");
+            const dataName = this.getAttribute("data-name");
+            deleteForm = this.closest(".delete-form");
+            modal.querySelector("p").innerHTML = `Are you sure you want to delete <strong>"${dataName}</strong>"?`;
+            modal.style.display = "flex";
+        });
+    });
+
+
+    cancelButton.addEventListener("click", function () {
+        modal.style.display = "none";
+    });
+
+
+    confirmButton.addEventListener("click", function () {
+        if (deleteForm) {
+            deleteForm.submit();
+        }
+    });
+
+    modal.addEventListener("click", function (e) {
+        modal.style.display = "none";
+    });
+</script>

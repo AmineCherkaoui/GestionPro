@@ -1,0 +1,183 @@
+{% load custom_filters %}
+<header class="sidebar">
+    <nav>
+        <div class="nav-list">
+
+            <a class="logo-link"  href="{% url "dashboard" %}">
+            {% if settings.logo %}
+                <img src="{{ settings.logo.url }}" alt="{{ settings.name }} LOGO">
+            {% else %}
+                <h1>LOGO</h1>
+            {% endif %}
+            </a>
+
+            <ul>
+                <li>
+                    <a href="{% url "clients-list" %}"
+                       class="nav-link {% if '/clients/' in request.path %}active{% endif %}">
+
+                        <div class="menu-icon">
+
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <p>Clients</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url "suppliers-list" %}"
+                       class="nav-link {% if '/suppliers/' in request.path %}active{% endif %}">
+                        <div class="menu-icon">
+                            <i class="fa-solid fa-truck"></i>
+
+                        </div>
+                        <p>Fournisseurs</p>
+                    </a>
+
+                </li>
+                <li>
+                    <a href="{% url "products-list" %}"
+                       class="nav-link {% if '/products/' in request.path %}active{% endif %}">
+
+                        <div class="menu-icon">
+                            <i class="fa-solid fa-boxes-stacked"></i>
+
+                        </div>
+                        <p>Produits</p>
+                    </a>
+
+                </li>
+                <li>
+                    <a href="{% url "services-list" %}"
+                       class="nav-link {% if '/services/' in request.path %}active{% endif %}">
+                        <div class="menu-icon">
+
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <p>Services</p>
+                    </a>
+
+                </li>
+                <li>
+
+                    <div class="nav-link nav-group {% if '/demandes/' in request.path %}active{% endif %}">
+                        <div class="menu-icon">
+
+                            <i class="fa-solid fa-file-contract"></i>
+                        </div>
+                        <p>Demandes</p>
+                        <div class="sidebar-group-arrow">
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                    </div>
+                    <div class="sidebar-dropdown-content">
+                        <a href="{% url 'demandes-caution-list' %}">Caution</a>
+                        <a href="{% url 'demande-virement-list' %}">Virement Banquaire</a>
+                    </div>
+                </li>
+                <li>
+                    <a href="{% url "invoices-list" %}"
+                       class="nav-link {% if '/invoices/' in request.path %}active{% endif %}">
+                        <div class="menu-icon">
+
+                            <i class="fa-solid fa-file-invoice-dollar"></i>
+                        </div>
+                        <p>Factures</p>
+                    </a>
+                </li>
+
+
+                <li>
+                    <a href="{% url "quotes-list" %}"
+                       class="nav-link {% if '/quotes/' in request.path %}active{% endif %}">
+                        <div class="menu-icon">
+
+                            <i class="fa-solid fa-file-invoice"></i>
+                        </div>
+                        <p>Devis</p>
+                    </a>
+
+                </li>
+                <li>
+                    <a href="{% url "purchase-orders-list" %}"
+                       class="nav-link {% if '/purchase-orders/' in request.path %}active{% endif %}">
+                        <div class="menu-icon">
+
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <p>Bon de commande</p>
+                    </a>
+
+
+                </li>
+            </ul>
+        </div>
+
+        <div class="sidebar-bottom ">
+            {% if request.user.is_superuser %}
+            <div class="sidebar-dropdown-content">
+                <a class="nav-link" href="{% url 'settings' %}">
+                    <div class="menu-icon">
+
+                        <i class="fa-solid fa-gear"></i>
+                    </div>
+                    <p>Parametres</p>
+                </a>
+                <a class="nav-link" href="{% url 'users-list' %}">
+                    <div class="menu-icon">
+
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <p>Users</p>
+                </a>
+
+                <form method="post" action="{% url "logout" %}">
+                    {% csrf_token %}
+                    <button class="nav-link" type="submit">
+                        <div class="menu-icon">
+
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                        </div>
+                        <p>Logout</p>
+                    </button>
+                </form>
+            </div>
+            <div class="nav-link nav-group">
+                <div class="menu-icon">
+                    <i class="fas fa-ellipsis-h"></i>
+                </div>
+                <p>More</p>
+                <div class="sidebar-group-arrow">
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if not request.user.is_superuser %}
+            <form method="post" action="{% url "logout" %}">
+                {% csrf_token %}
+                <button class="nav-link" type="submit">
+                    <div class="menu-icon">
+
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    </div>
+                    <p>Logout</p>
+                </button>
+            </form>
+            {% endif %}
+
+        </div>
+
+    </nav>
+
+</header>
+<div class="overlay"></div>
+
+<button class="sidebar-toggle">
+    <div></div>
+    <div></div>
+    <div></div>
+</button>
+
+
+
+

@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}
+    Clients List | {{ settings.name }}
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/root.css" %}">
+    <link rel="stylesheet" href="{% static "css/list.css" %}">
+    <link rel="stylesheet" href="{% static "css/deleteModal.css" %}">
+    <script defer src="{% static "js/tableActionsDropDown.js" %}"></script>
+
+{% endblock %}
+
+{% block content %}
+    {% include "messages.html" %}
+
+    <div class="header">
+        <h1>Clients</h1>
+        {% if perms.clients.add_client %}
+        <a class="btn-icon" href="{% url "create-client" %}">
+            <i class="fa-solid fa-plus"></i>
+            Add new
+        </a>
+        {% endif %}
+    </div>
+
+    <div class="list-container">
+        <form class="search-box" method="get" action="{% url 'clients-list' %}">
+            <input type="text" name="search" placeholder="Search by name" value="{{ search | default:"" }}">
+            <button type="submit">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </form>
+
+        <div class="table-container"><table>
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Phone</th>
+                <th>ICE</th>
+                {% if perms.clients.change_client or perms.clients.delete_client  %}
+                <th>Actions</th>
+                {% endif %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for client in clients %}
+                <tr>
+                    <td class="name">{{ client.name }}</td>
+                    <td>{{ client.address }}</td>
+                    <td>{{ client.phone }}</td>
+                    <td>{{ client.ice }}</td>
+                    {% if perms.clients.change_client or perms.clients.delete_client  %}
+                        <td class="actions-cell">
+                            <button class="actions-button">
+                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                            </button>
+                            <div class="dropdown-menu">
+
+
+                                {% if perms.clients.change_client %}
+                                    <a href="{% url 'edit-client' client.id %}" class="dropdown-item edit">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                        Edit
+                                    </a>
+                                {% endif %}
+
+                                {% if perms.clients.delete_client %}
+                                    <form class="delete-form" action="{% url 'delete-client' client.id %}" method="post" style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="button" class="dropdown-item delete" data-id="{{ client.id }}" data-name="{{ client.name }}">
+                                            <i class="fa-solid fa-trash"></i>
+                                            Delete
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </td>
+                    {% endif %}
+
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="100%">
+                        No client found.
+                    </td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table></div>
+
+        <div class="pagination">
+
+            {% if clients.has_previous %}
+                <a class="pagination-link" href="?page={{ clients.previous_page_number }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="pagination-icon prev-page">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </a>
+            {% endif %}
+
+            <p>
+                Page {{ clients.number }} of {{ clients.paginator.num_pages }}
+            </p>
+
+            {% if clients.has_next %}
+                <a class="pagination-link" href="?page={{ clients.next_page_number }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="pagination-icon next-page">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </a>
+            {% endif %}
+
+        </div>
+
+
+    </div>
+
+
+
+
+  {% include "deleteModal.html" %}
+
+{% endblock %}
+
+

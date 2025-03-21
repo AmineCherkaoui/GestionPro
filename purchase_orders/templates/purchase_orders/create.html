@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block page_title %}
+    {% if form.instance.id %}Edit | {{ form.instance.name }}{% else %}New Purchase Order Out{% endif %} | {{ settings.name }}
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/form.css" %}">
+
+{% endblock %}
+
+{% block content %}
+    <a class="btn-back" href="{% url 'purchase-orders-list' %}">
+        <?xml version="1.0" encoding="UTF-8"?><svg width="16px" height="16px" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000"><path d="M21 12L3 12M3 12L11.5 3.5M3 12L11.5 20.5" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        Back
+    </a>
+    <h1>Create Purchase Order</h1>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="invoice-details-header-box">
+            <h2>Purchase Order Details</h2>
+            <div class="invoice-form">
+                {{ purchase_order_form.as_div }}
+            </div>
+        </div>
+
+        <div>
+            <div class="invoice-header">
+                <h2>Products</h2>
+                <button type="button" id="add-product">Add Product</button>
+            </div>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            <div id="product-forms">
+                {{ product_form.management_form }}
+                {% for form in product_form %}
+                    <div class="product-form">
+                        {{ form.as_div }}
+                        {% if form.instance.id %}
+                            <button type="button" class="remove-product">Remove</button>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div>
+            <div class="invoice-header">
+                <h2>Services</h2>
+                <button type="button" id="add-service">Add Service</button>
+            </div>
+            <div id="service-forms">
+                {{ service_form.management_form }}
+                {% for form in service_form %}
+                    <div class="service-form">
+                        {{ form.as_div }}
+                        {% if form.instance.id %}
+                            <button type="button" class="remove-service">Remove</button>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <button type="submit">Save Purchase Order</button>
+    </form>
+
+    <script>
+
+
+        function addForm(containerId, prefix, formType) {
+            let container = document.getElementById(containerId);
+            let totalForms = document.querySelector(`#id_${prefix}-TOTAL_FORMS`);
+            let formCount = Number(totalForms.value);
+
+
+            let newForm = container.querySelector('.product-form, .service-form').cloneNode(true);
+            newForm.innerHTML = newForm.innerHTML.replace(/-\d+-/g, `-${formCount}-`);
+
+            let removeButton = document.createElement('button');
+            removeButton.type = 'button';
+            removeButton.classList.add('remove-' + formType);
+            removeButton.textContent = 'Remove';
+
+            newForm.appendChild(removeButton);
+            container.appendChild(newForm);
+            totalForms.value = formCount + 1;
+        }
+
+        function removeForm(event) {
+            if (event.target.classList.contains("remove-product") || event.target.classList.contains("remove-service")) {
+                event.target.parentElement.remove();
+
+                let totalForms = document.querySelector(`#id_purchase_orderoutproduct_set-TOTAL_FORMS`);
+                totalForms.value = Number(totalForms.value) - 1;
+            }
+        }
+
+        document.getElementById("add-product").addEventListener("click", function () {
+            addForm("product-forms", "purchase_order_out_product", "product");
+        });
+
+        document.getElementById("add-service").addEventListener("click", function () {
+            addForm("service-forms", "purchase_order_out_service", "service");
+        });
+
+
+        document.body.addEventListener("click", removeForm);
+
+
+
+
+    </script>
+
+{% endblock %}

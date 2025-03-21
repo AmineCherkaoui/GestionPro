@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block page_title %}
+    Demande de virement bancaire | {{ settings.name }}
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/root.css" %}">
+    <link rel="stylesheet" href="{% static "css/list.css" %}">
+    <link rel="stylesheet" href="{% static "css/deleteModal.css" %}">
+    <script defer src="{% static "js/tableActionsDropDown.js" %}"></script>
+
+{% endblock %}
+
+{% block content %}
+    {% include "messages.html" %}
+
+    <div class="header">
+        <h1>Demandes de virement banquaire</h1>
+        {% if perms.demandes.add_demandevirement %}
+        <a class="btn-icon" href="{% url "create-demande-virement" %}">
+            <i class="fa-solid fa-plus"></i>
+            Add new
+        </a>
+        {% endif %}
+    </div>
+
+    <div class="list-container">
+        <form class="search-box" method="get" action="{% url 'demande-virement-list' %}">
+            <input type="text" name="search" placeholder="Search by name" value="{{ search | default:"" }}">
+            <button type="submit">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </form>
+
+        <div class="table-container"><table>
+            <thead>
+            <tr>
+                <th>Titulaire</th>
+                <th>RIB</th>
+                <th>Montant</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for demande_virement in demandes_virement %}
+                <tr>
+                    <td class="name">{{ demande_virement.titulaire }}</td>
+                    <td>{{ demande_virement.rib }}</td>
+                    <td>{{ demande_virement.montant|format_currency }} MAD</td>
+
+                    <td class="actions-cell">
+
+
+                        <button class="actions-button">
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                        </button>
+                        <div class="dropdown-menu">
+
+
+                            <a href="{% url 'demande-virement-pdf' demande_virement.id %}" class="dropdown-item edit">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                Print
+                            </a>
+                            {% if perms.demandes.change_demandevirement  %}
+                            <a href="{% url 'edit-demande-virement' demande_virement.id %}" class="dropdown-item edit">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                                Edit
+                            </a>
+                                {% endif %}
+
+                            {% if perms.demandes.delete_demandevirement %}
+                            <form class="delete-form" action="{% url 'delete-demande-virement' demande_virement.id %}" method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="button" class="dropdown-item delete" data-id="{{ demande_virement.id }}" data-name="{{ demande_virement.titulaire }}">
+                                    <i class="fa-solid fa-trash"></i>
+                                    Delete
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="100%">
+                        Aucune demande de virement banquire trouvé
+                    </td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table></div>
+
+        <div class="pagination">
+
+            {% if demandes_virement.has_previous %}
+                <a class="pagination-link" href="?page={{ demandes_virement.previous_page_number }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="pagination-icon prev-page">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </a>
+            {% endif %}
+
+            <p>
+                Page {{ demandes_virement.number }} of {{ demandes_virement.paginator.num_pages }}
+            </p>
+
+            {% if demandes_virement.has_next %}
+                <a class="pagination-link" href="?page={{ demandes_virement.next_page_number }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="pagination-icon next-page">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </a>
+            {% endif %}
+
+        </div>
+    </div>
+
+
+
+
+    {% include "deleteModal.html" %}
+
+{% endblock %}
+
+
