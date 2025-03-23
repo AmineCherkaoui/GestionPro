@@ -90,10 +90,11 @@
 </head>
 <body>
 <main>
-    <h1>User Configuration</h1>
+    <h1>Configuration utilisateur</h1>
     <form method="post">
         {% csrf_token %}
         {{ user_form.as_div }}
+
         <button type="submit">Save</button>
     </form></main>
 </body>

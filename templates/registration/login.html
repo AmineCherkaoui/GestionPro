@@ -39,19 +39,22 @@
             <h1>LOGO</h1>
             {% endif %}
         {% if form.errors %}
-            <p class="error">incorrect username or password. Please try again.</p>
+            <p class="error">Nom d'utilisateur ou mot de passe incorrect. Veuillez réessayer.</p>
         {% endif %}
         {% csrf_token %}
-        {% for field in form %}
-            <div class="fields">
-                <label >
-                    {{ field.label }}
-                    {{ field }}
-                </label>
-            </div>
-        {% endfor %}
-
-        <button type="submit">Login</button>
+        <div class="fields">
+            <label>
+                Nom d'utilisateur
+                <input type="text" name="username" >
+            </label>
+        </div>
+        <div class="fields">
+            <label>
+                Mot de passe
+                <input type="password" name="password" >
+            </label>
+        </div>
+        <button type="submit">Se connecter</button>
     </form>
 
 

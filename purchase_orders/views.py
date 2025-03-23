@@ -16,7 +16,7 @@ from decimal import Decimal
 from weasyprint import HTML
 from num2words import num2words
 from datetime import date
-
+from django.db.models import Q
 
 # Create your views here.
 @login_required
@@ -24,7 +24,7 @@ def purchase_orders_list(request):
     search = request.GET.get('search')
     purchase_orders = PurchaseOrderOut.objects.all().select_related("supplier").order_by("-id")
     if search:
-        purchase_orders = purchase_orders.filter(supplier__name__icontains=search)
+        purchase_orders = purchase_orders.filter(Q(supplier__name__icontains=search) | Q(id__icontains=search))
 
     paginator = Paginator(purchase_orders, 7)
     page = request.GET.get('page')
@@ -72,7 +72,7 @@ def create_purchase_order(request):
                         purchase_order_service = form.save(commit=False)
                         purchase_order_service.purchase_order = purchase_order
                         purchase_order_service.save()
-            messages.success(request,"Puchase order successfully created")
+            messages.success(request,"Bon de commande créée avec succès")
             return redirect('purchase-orders-list')
     else:
         purchase_order_form = PurchaseOrderOutForm()
@@ -91,7 +91,7 @@ def delete_purchase_order(request, purchase_order_id):
     purchase_order = get_object_or_404(PurchaseOrderOut, id=purchase_order_id)
     if request.method == "POST":
         purchase_order.delete()
-        messages.success(request,"Purchase order successfully deleted")
+        messages.success(request,"Bon de commande modifiée avec succès")
         return redirect("purchase-orders-list")
     return render(request,"purchase_orders/delete.html",{"purchase_order":purchase_order})
 
@@ -127,7 +127,7 @@ def purchase_order_add_product(request,purchase_order_id):
         if not created:
             purchase_order_product.quantity += quantity
             purchase_order_product.save()
-        messages.success(request,f"Product successfully added")
+        messages.success(request,f"Product ajouté avec succès")
         return redirect('purchase-order-detail', purchase_order.id)
 
     return render(request, 'purchase_orders/add_product.html', {
@@ -140,7 +140,7 @@ def purchase_order_add_product(request,purchase_order_id):
 def purchase_order_delete_product(request, purchase_order_id, product_id):
     purchase_order_product = get_object_or_404(PurchaseOrderOutProduct, purchase_order_id=purchase_order_id, id=product_id)
     purchase_order_product.delete()
-    messages.success(request,f"Product successfully deleted")
+    messages.success(request,f"Product supprimé avec succès")
     return redirect('purchase-order-detail', purchase_order_id)
 
 
@@ -163,7 +163,7 @@ def purchase_order_add_service(request, purchase_order_id):
         if not created:
             purchase_order_service.quantity += quantity
             purchase_order_service.save()
-        messages.success(request,f"Service successfully added")
+        messages.success(request,f"Service ajouté avec succès")
         return redirect('purchase-order-detail', purchase_order_id=purchase_order.id)
 
     return render(request, 'purchase_orders/add_service.html', {
@@ -175,7 +175,7 @@ def purchase_order_add_service(request, purchase_order_id):
 def  purchase_order_delete_service(request, purchase_order_id, service_id):
     purchase_order_service = get_object_or_404(PurchaseOrderOutService, purchase_order_id=purchase_order_id, id=service_id)
     purchase_order_service.delete()
-    messages.success(request,f"Service successfully deleted")
+    messages.success(request,f"Service supprimé avec succès")
     return redirect('purchase-order-detail', purchase_order_id=purchase_order_id)
 
 

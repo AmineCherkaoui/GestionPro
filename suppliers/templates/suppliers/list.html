@@ -20,14 +20,13 @@
         {% if perms.suppliers.add_supplier %}
         <a class="btn-icon" href="{% url "create-supplier" %}">
             <i class="fa-solid fa-plus"></i>
-            Add new
         </a>
         {% endif %}
     </div>
 
     <div class="list-container">
         <form class="search-box" method="get" action="{% url 'suppliers-list' %}">
-            <input type="text" name="search" placeholder="Search by name" value="{{ search | default:"" }}">
+            <input type="text" name="search" placeholder="Recherche" value="{{ search | default:"" }}">
             <button type="submit">
                 <i class="fa-solid fa-magnifying-glass"></i>
             </button>
@@ -36,9 +35,9 @@
           <div class="table-container">  <table>
                 <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Address</th>
-                    <th>Phone</th>
+                    <th>Nom</th>
+                    <th>Adresse</th>
+                    <th>Téléphone</th>
                     <th>ICE</th>
                     {% if perms.suppliers.change_supplier or perms.suppliers.delete_supplier  %}
                         <th>Actions</th>
@@ -60,7 +59,7 @@
                                     {% if perms.suppliers.change_supplier %}
                                         <a href="{% url 'edit-supplier' supplier.id %}" class="dropdown-item edit">
                                             <i class="fa-solid fa-pen-to-square"></i>
-                                            Edit
+                                           Modifier
                                         </a>
                                     {% endif %}
 
@@ -69,7 +68,7 @@
                                             {% csrf_token %}
                                             <button type="button" class="dropdown-item delete" data-id="{{ supplier.id }}" data-name="{{ supplier.name }}">
                                                 <i class="fa-solid fa-trash"></i>
-                                                Delete
+                                                Supprimer
                                             </button>
                                         </form>
                                     {% endif %}
@@ -83,7 +82,7 @@
                 {% empty %}
                     <tr>
                         <td colspan="100%">
-                            No supplier found.
+                            Aucun fournisseur trouvé.
                         </td>
                     </tr>
                 {% endfor %}

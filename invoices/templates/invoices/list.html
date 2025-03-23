@@ -21,14 +21,13 @@
         {% if perms.invoices.add_invoiceout %}
         <a class="btn-icon" href="{% url "create-invoice" %}">
             <i class="fa-solid fa-plus"></i>
-            Add new
         </a>
      {% endif %}
     </div>
 
     <div class="list-container">
         <form class="search-box" method="get" action="{% url 'invoices-list' %}">
-            <input type="text" name="search" placeholder="Search by name" value="{{ search | default:"" }}">
+            <input type="text" name="search" placeholder="Recherche" value="{{ search | default:"" }}">
             <button type="submit">
                 <i class="fa-solid fa-magnifying-glass"></i>
             </button>
@@ -59,11 +58,11 @@
                         <div class="dropdown-menu">
                             <a href="{% url 'invoice-pdf' invoice.id %}" class="dropdown-item edit">
                                 <i class="fa-solid fa-file-pdf"></i>
-                                Print
+                                Imprimer
                             </a>
                             <a href="{% url 'invoice-detail' invoice.id %}" class="dropdown-item edit">
                                 <i class="fa-solid fa-ellipsis"></i>
-                                Details
+                                Detail
                             </a>
 
                             {% if perms.invoices.delete_invoiceout %}
@@ -71,7 +70,7 @@
                                 {% csrf_token %}
                                 <button type="button" class="dropdown-item delete" data-id="{{ invoice.id }}" data-name="{{ invoice.id }}/OT/{{ invoice.date|date:"Y" }}">
                                     <i class="fa-solid fa-trash"></i>
-                                    Delete
+                                    Supprimer
                                 </button>
                             </form>
                             {% endif %}
@@ -81,7 +80,7 @@
             {% empty %}
                 <tr>
                     <td colspan="100%">
-                        No invoice found.
+                        Aucune facture trouvée.
                     </td>
                 </tr>
             {% endfor %}

@@ -13,7 +13,7 @@ def settings(request):
         form = SettingsForm(request.POST, request.FILES, instance=settings)
         if form.is_valid():
             form.save()
-            messages.success(request,"Settings successfully Changed")
+            messages.success(request,"Settings modifié avec succès")
             return redirect('settings')
     else:
         form = SettingsForm(instance=settings)

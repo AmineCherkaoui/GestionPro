@@ -43,9 +43,6 @@
                 {% for form in product_form %}
                     <div class="product-form">
                         {{ form.as_div }}
-                        {% if form.instance.id %}
-                            <button type="button" class="remove-product">Remove</button>
-                        {% endif %}
                     </div>
                 {% endfor %}
             </div>
@@ -61,15 +58,12 @@
                 {% for form in service_form %}
                     <div class="service-form">
                         {{ form.as_div }}
-                        {% if form.instance.id %}
-                            <button type="button" class="remove-service">Remove</button>
-                        {% endif %}
                     </div>
                 {% endfor %}
             </div>
         </div>
 
-        <button type="submit">Save Devis</button>
+        <button type="submit">Save</button>
     </form>
 
 
@@ -88,7 +82,7 @@
             let removeButton = document.createElement('button');
             removeButton.type = 'button';
             removeButton.classList.add('remove-' + formType);
-            removeButton.textContent = 'Remove';
+            removeButton.textContent = 'Retirer';
 
             newForm.appendChild(removeButton);
             container.appendChild(newForm);

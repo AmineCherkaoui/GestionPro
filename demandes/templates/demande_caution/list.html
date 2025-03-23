@@ -22,14 +22,13 @@
         {% if perms.demandes.add_demandecaution %}
         <a class="btn-icon" href="{% url "create-demande-caution" %}">
             <i class="fa-solid fa-plus"></i>
-            Add new
         </a>
     {% endif %}
     </div>
 
     <div class="list-container">
         <form class="search-box" method="get" action="{% url 'demandes-caution-list' %}">
-            <input type="text" name="search" placeholder="Search by name" value="{{ search | default:"" }}">
+            <input type="text" name="search" placeholder="Recherche" value="{{ search | default:"" }}">
             <button type="submit">
                 <i class="fa-solid fa-magnifying-glass"></i>
             </button>
@@ -39,7 +38,7 @@
             <thead>
             <tr>
                 <th>N°</th>
-                <th>Administration interesse</th>
+                <th>Administration intéressée</th>
                 <th>Montant</th>
                 <th>Type</th>
                 <th>Actions</th>
@@ -59,13 +58,13 @@
                         <div class="dropdown-menu">
                             <a href="{% url 'demande-caution-pdf' demande_caution.id %}" class="dropdown-item edit">
                                 <i class="fa-solid fa-file-pdf"></i>
-                                Print
+                                Imprimer
                             </a>
                             {% if perms.demandes.change_demandecaution %}
 
                             <a href="{% url 'edit-demande-caution' demande_caution.id %}" class="dropdown-item edit">
                                 <i class="fa-solid fa-pen-to-square"></i>
-                                Edit
+                                Modifier
                             </a>
                             {% endif %}
                             {% if perms.demandes.delete_demandecaution %}
@@ -73,7 +72,7 @@
                                 {% csrf_token %}
                                 <button type="button" class="dropdown-item delete" data-id="{{ demande_caution.id }}" data-name="{{ demande_caution.administration_interessee }}">
                                     <i class="fa-solid fa-trash"></i>
-                                    Delete
+                                    Supprimer
                                 </button>
                             </form>
                         {% endif %}
@@ -84,7 +83,7 @@
             {% empty %}
                 <tr>
                     <td colspan="100%">
-                        Aucune demande de caution banquire trouvé
+                        Aucune demande de caution trouvé.
                     </td>
                 </tr>
             {% endfor %}

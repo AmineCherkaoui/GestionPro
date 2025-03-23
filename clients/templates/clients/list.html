@@ -21,14 +21,13 @@
         {% if perms.clients.add_client %}
         <a class="btn-icon" href="{% url "create-client" %}">
             <i class="fa-solid fa-plus"></i>
-            Add new
         </a>
         {% endif %}
     </div>
 
     <div class="list-container">
         <form class="search-box" method="get" action="{% url 'clients-list' %}">
-            <input type="text" name="search" placeholder="Search by name" value="{{ search | default:"" }}">
+            <input type="text" name="search" placeholder="Recherche" value="{{ search | default:"" }}">
             <button type="submit">
                 <i class="fa-solid fa-magnifying-glass"></i>
             </button>
@@ -37,9 +36,9 @@
         <div class="table-container"><table>
             <thead>
             <tr>
-                <th>Name</th>
-                <th>Address</th>
-                <th>Phone</th>
+                <th>Nom</th>
+                <th>Adresse</th>
+                <th>Téléphone</th>
                 <th>ICE</th>
                 {% if perms.clients.change_client or perms.clients.delete_client  %}
                 <th>Actions</th>
@@ -64,7 +63,7 @@
                                 {% if perms.clients.change_client %}
                                     <a href="{% url 'edit-client' client.id %}" class="dropdown-item edit">
                                         <i class="fa-solid fa-pen-to-square"></i>
-                                        Edit
+                                        Modifier
                                     </a>
                                 {% endif %}
 
@@ -73,7 +72,7 @@
                                         {% csrf_token %}
                                         <button type="button" class="dropdown-item delete" data-id="{{ client.id }}" data-name="{{ client.name }}">
                                             <i class="fa-solid fa-trash"></i>
-                                            Delete
+                                            Supprimer
                                         </button>
                                     </form>
                                 {% endif %}
@@ -85,7 +84,7 @@
             {% empty %}
                 <tr>
                     <td colspan="100%">
-                        No client found.
+                        Aucun client trouvé.
                     </td>
                 </tr>
             {% endfor %}

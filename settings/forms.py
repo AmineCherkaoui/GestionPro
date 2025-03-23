@@ -16,11 +16,11 @@ class SettingsForm(forms.ModelForm):
         }
         labels={
             "name":"Nom de la société  ",
-            "type_de_societe":"type de la société",
-            "capital":"Le capital social",
+            "type_de_societe":"Type de la société",
+            "capital":"Capital social",
             "gerant":" Gérant",
             "location":"Ville",
-            "tel":"TEL",
+            "tel":"Téléphone",
             "fax":"FAX",
             "ice":"ICE",
             "bank_name":"Nom de la banque",

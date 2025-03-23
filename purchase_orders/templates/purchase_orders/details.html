@@ -39,27 +39,28 @@
             </div>
             <a class="btn-icon" href="{% url "purchase-order-pdf" purchase_order.id %}">
                 <i class="fa-solid fa-file-pdf"></i>
-                <p>Print</p>
+                <p style="font-size: 1.6rem;font-weight: bold">
+                    Imprimer
+                </p>
             </a>
         </header>
 
         <div>
             <div class="products-details-header">
-                <h2>Products</h2>
+                <h2>Produits</h2>
                 {% if perms.purchase_orders.change_purchaseorderout %}
                 <a class="btn-icon" href="{% url "purchase-order-add-product" purchase_order.id %}">
                     <i class="fa-solid fa-plus"></i>
-                    <p>Add</p>
                 </a>
                 {% endif %}
             </div>
            <div class="table-container"> <table>
                 <thead>
                 <tr>
-                    <th>Name</th>
+                    <th>Nom</th>
                     <th>Description</th>
-                    <th>Quantity</th>
-                    <th>Price per unit</th>
+                    <th>Quantité</th>
+                    <th>Prix unitaire</th>
                     <th>Total</th>
                     {% if perms.purchase_orders.change_purchaseorderout %}
                     <th>Actions</th>
@@ -80,7 +81,7 @@
                                 {% csrf_token %}
                                 <button type="button" class="dropdown-item delete" data-id="{{ item.product.id }}" data-name="{{item.product.name}}">
                                     <i class="fa-solid fa-trash"></i>
-                                    Delete
+                                    Supprimer
                                 </button>
                             </form>
                         </td>
@@ -88,7 +89,7 @@
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="6">No products found.</td>
+                        <td colspan="6">Aucun produit trouvé.</td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -101,17 +102,17 @@
                 {% if perms.purchase_orders.change_purchaseorderout %}
                 <a class="btn-icon" href="{% url "purchase-order-add-service" purchase_order.id %}">
                     <i class="fa-solid fa-plus"></i>
-                    <p>Add</p>
+
                 </a>
                 {% endif %}
             </div>
             <div class="table-container"><table>
                 <thead>
                 <tr>
-                    <th>Name</th>
+                    <th>Nom</th>
                     <th>Description</th>
-                    <th>Quantity</th>
-                    <th>Price per unit</th>
+                    <th>Quantité</th>
+                    <th>Price unitaire</th>
                     <th>Total</th>
                     {% if perms.purchase_orders.change_purchaseorderout %}
                     <th>Actions</th>
@@ -132,7 +133,7 @@
                                {% csrf_token %}
                                <button type="button" class="dropdown-item delete" data-id="{{ item.service.id }}" data-name="{{item.service.name}}">
                                    <i class="fa-solid fa-trash"></i>
-                                   Delete
+                                   Supprimer
                                </button>
                            </form>
                         </td>
@@ -141,7 +142,7 @@
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="6">No services found.</td>
+                        <td colspan="6">Aucun service trouvé.</td>
                     </tr>
                 {% endfor %}
                 </tbody>

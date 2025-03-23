@@ -6,13 +6,16 @@ from django.contrib.auth import password_validation
 
 
 class UserForm(UserCreationForm):
+    password1 = forms.CharField(widget=forms.PasswordInput(), required=False, label="Mot de passe")
+    password2 = forms.CharField(widget=forms.PasswordInput(), required=False, label="Confirmer le mot de passe")
     ALL_ADD = forms.BooleanField(required=False, label="Create")
     ALL_CHANGE = forms.BooleanField(required=False, label="Update")
     ALL_DELETE = forms.BooleanField(required=False, label="Delete")
 
     class Meta:
         model = User
-        fields = ['username', "email","password1","password2", "is_superuser"]
+        fields = ['username', "email", "is_superuser"]
+
 
 
     def save(self, commit=True):
@@ -25,7 +28,6 @@ class UserForm(UserCreationForm):
         return user
 
     def assign_permissions(self, user):
-        """Assign permissions to the user based on form input."""
         if self.cleaned_data.get('ALL_ADD'):
             add_group, _ = Group.objects.get_or_create(name='Create')
             add_perms = Permission.objects.filter(codename__startswith='add_')
@@ -46,8 +48,8 @@ class UserForm(UserCreationForm):
 
 
 class UserEditForm(forms.ModelForm):
-    password1 = forms.CharField(widget=forms.PasswordInput(), required=False, label="Change to new password")
-    password2 = forms.CharField(widget=forms.PasswordInput(), required=False, label="Confirm new password")
+    password1 = forms.CharField(widget=forms.PasswordInput(), required=False, label="Changer le mot de passe")
+    password2 = forms.CharField(widget=forms.PasswordInput(), required=False, label="Confirmer le mot de passe")
     ALL_ADD = forms.BooleanField(required=False, label="Create")
     ALL_CHANGE = forms.BooleanField(required=False, label="Update")
     ALL_DELETE = forms.BooleanField(required=False, label="Delete")
@@ -55,6 +57,10 @@ class UserEditForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'is_superuser']
+        labels={
+            "username":"Nom d'utilisateur",
+            "email":"Adresse e-mail",
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

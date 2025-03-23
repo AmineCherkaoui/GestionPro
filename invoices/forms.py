@@ -15,20 +15,23 @@ class InvoiceOutForm(forms.ModelForm):
                 })
         }
 
+        labels={
+            "date":"Date de la facture",
+        }
+
 
 
 
 
 class AddProductForm(forms.ModelForm):
-    product = forms.ModelChoiceField(queryset=Product.objects.all())
-    quantity = forms.IntegerField(min_value=1)
+    product = forms.ModelChoiceField(queryset=Product.objects.all(),label="Produit")
+    quantity = forms.IntegerField(min_value=1,label="Quantité")
     class Meta:
         model = InvoiceOutProduct
         fields = ['product', 'quantity']
-        widgets = {
-            'quantity': forms.DateInput(
-                attrs={'min': 1})
-        }
+
+
+
 
 
     def __init__(self, *args, **kwargs):
@@ -49,8 +52,9 @@ class AddProductForm(forms.ModelForm):
 
 
 class AddServiceForm(forms.ModelForm):
-    service = forms.ModelChoiceField(queryset=Service.objects.all(), label="Select Service")
-    quantity = forms.IntegerField(min_value=1, label="Quantity")
+    service = forms.ModelChoiceField(queryset=Service.objects.all(), label="Service")
+    quantity = forms.IntegerField(min_value=1, label="Quantité")
     class Meta:
         model = InvoiceOutService
         fields = ['service', 'quantity']
+

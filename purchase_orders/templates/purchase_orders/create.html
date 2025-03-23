@@ -16,13 +16,13 @@
         <?xml version="1.0" encoding="UTF-8"?><svg width="16px" height="16px" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000"><path d="M21 12L3 12M3 12L11.5 3.5M3 12L11.5 20.5" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
         Back
     </a>
-    <h1>Create Purchase Order</h1>
+    <h1>Creation bon de commande</h1>
 
     <form method="post">
         {% csrf_token %}
 
         <div class="invoice-details-header-box">
-            <h2>Purchase Order Details</h2>
+            <h2>Bon de commande Details</h2>
             <div class="invoice-form">
                 {{ purchase_order_form.as_div }}
             </div>
@@ -31,7 +31,7 @@
         <div>
             <div class="invoice-header">
                 <h2>Products</h2>
-                <button type="button" id="add-product">Add Product</button>
+                <button type="button" id="add-product">Ajouter Produit</button>
             </div>
             {% if messages %}
                 {% for message in messages %}
@@ -43,9 +43,6 @@
                 {% for form in product_form %}
                     <div class="product-form">
                         {{ form.as_div }}
-                        {% if form.instance.id %}
-                            <button type="button" class="remove-product">Remove</button>
-                        {% endif %}
                     </div>
                 {% endfor %}
             </div>
@@ -54,22 +51,19 @@
         <div>
             <div class="invoice-header">
                 <h2>Services</h2>
-                <button type="button" id="add-service">Add Service</button>
+                <button type="button" id="add-service">Ajouter Service</button>
             </div>
             <div id="service-forms">
                 {{ service_form.management_form }}
                 {% for form in service_form %}
                     <div class="service-form">
                         {{ form.as_div }}
-                        {% if form.instance.id %}
-                            <button type="button" class="remove-service">Remove</button>
-                        {% endif %}
                     </div>
                 {% endfor %}
             </div>
         </div>
 
-        <button type="submit">Save Purchase Order</button>
+        <button type="submit">Save</button>
     </form>
 
     <script>
@@ -87,7 +81,7 @@
             let removeButton = document.createElement('button');
             removeButton.type = 'button';
             removeButton.classList.add('remove-' + formType);
-            removeButton.textContent = 'Remove';
+            removeButton.textContent = 'Retirer';
 
             newForm.appendChild(removeButton);
             container.appendChild(newForm);

@@ -164,11 +164,11 @@
             margin: 20px 0;
         }
     </style>
-    <title>Settings Configuration</title>
+    <title>Configuration des paramètres</title>
 </head>
 <body>
 <main>
-    <h1>Settings Configuration</h1>
+    <h1>Configuration des paramètres</h1>
     {% include "messages.html" %}
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
@@ -179,7 +179,7 @@
                 {% if settings.logo %}
                     <img id="current-logo" src="{{ settings.logo.url }}" alt="Current Logo">
                 {% else %}
-                    <p id="no-logo">Upload your logo.</p>
+                    <p id="no-logo">Upload votre logo.</p>
                 {% endif %}
                 <div class="file-input-wrapper">
                     <input type="file" name="logo" id="id_logo" accept="image/*" style="display: none;">
@@ -201,7 +201,7 @@
 
 
         <label for="id_color">
-            Color:
+            Couleur de l'application:
             <div id="color-picker"></div>
             <input hidden="hidden" type="float" id="id_hue" name="hue" value="{{ settings.hue }}">
             <input hidden="hidden" type="float" id="id_saturation" name="saturation" value="{{ settings.saturation }}">

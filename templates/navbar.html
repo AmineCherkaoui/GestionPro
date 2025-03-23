@@ -18,7 +18,7 @@
 
                         <div class="menu-icon">
 
-                            <i class="fa-solid fa-user"></i>
+                            <i class="fa-solid fa-users"></i>
                         </div>
                         <p>Clients</p>
                     </a>
@@ -57,23 +57,7 @@
                     </a>
 
                 </li>
-                <li>
 
-                    <div class="nav-link nav-group {% if '/demandes/' in request.path %}active{% endif %}">
-                        <div class="menu-icon">
-
-                            <i class="fa-solid fa-file-contract"></i>
-                        </div>
-                        <p>Demandes</p>
-                        <div class="sidebar-group-arrow">
-                            <i class="fas fa-chevron-down"></i>
-                        </div>
-                    </div>
-                    <div class="sidebar-dropdown-content">
-                        <a href="{% url 'demandes-caution-list' %}">Caution</a>
-                        <a href="{% url 'demande-virement-list' %}">Virement Banquaire</a>
-                    </div>
-                </li>
                 <li>
                     <a href="{% url "invoices-list" %}"
                        class="nav-link {% if '/invoices/' in request.path %}active{% endif %}">
@@ -109,6 +93,23 @@
 
 
                 </li>
+                <li>
+
+                    <div class="nav-link nav-group {% if '/demandes/' in request.path %}active{% endif %}">
+                        <div class="menu-icon">
+
+                            <i class="fa-solid fa-file-contract"></i>
+                        </div>
+                        <p>Demandes</p>
+                        <div class="sidebar-group-arrow">
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                    </div>
+                    <div class="sidebar-dropdown-content">
+                        <a href="{% url 'demandes-caution-list' %}">Caution</a>
+                        <a href="{% url 'demande-virement-list' %}">Virement Banquaire</a>
+                    </div>
+                </li>
             </ul>
         </div>
 
@@ -125,9 +126,9 @@
                 <a class="nav-link" href="{% url 'users-list' %}">
                     <div class="menu-icon">
 
-                        <i class="fa-solid fa-users"></i>
+                        <i class="fa-solid fa-user-gear"></i>
                     </div>
-                    <p>Users</p>
+                    <p>Utilisateurs</p>
                 </a>
 
                 <form method="post" action="{% url "logout" %}">
@@ -137,7 +138,7 @@
 
                             <i class="fa-solid fa-arrow-right-from-bracket"></i>
                         </div>
-                        <p>Logout</p>
+                        <p>Se déconnecter</p>
                     </button>
                 </form>
             </div>
@@ -145,7 +146,7 @@
                 <div class="menu-icon">
                     <i class="fas fa-ellipsis-h"></i>
                 </div>
-                <p>More</p>
+                <p>Plus</p>
                 <div class="sidebar-group-arrow">
                     <i class="fas fa-chevron-down"></i>
                 </div>

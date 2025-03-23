@@ -17,7 +17,7 @@ from weasyprint import HTML
 
 
 from num2words import num2words
-
+from django.db.models import Q
 
 # Create your views here.
 @login_required
@@ -26,7 +26,8 @@ def invoices_list(request):
     invoices = InvoiceOut.objects.all().select_related("client").order_by("-id")
 
     if search:
-        invoices = invoices.filter(client__name__icontains=search)
+        invoices = invoices.filter(Q(client__name__icontains=search) | Q(id__icontains=search))
+
 
     paginator = Paginator(invoices, 7)
     page = request.GET.get('page')
@@ -77,7 +78,7 @@ def create_invoice(request):
                         invoice_service = form.save(commit=False)
                         invoice_service.invoice = invoice
                         invoice_service.save()
-            messages.success(request,"Invoice successfully created")
+            messages.success(request,"Facture créée avec succès")
             return redirect('invoices-list')
 
     else:
@@ -104,7 +105,7 @@ def delete_invoice(request, invoice_id):
         except QuoteOut.DoesNotExist:
             pass
         invoice.delete()
-        messages.success(request, "Invoice successfully deleted")
+        messages.success(request, "Facture supprimée avec succès")
     return redirect("invoices-list")
 
 
@@ -142,13 +143,25 @@ def invoice_add_product(request,invoice_id):
 
         product.quantity -= quantity
         product.save()
-        messages.success(request, "Product successfully added")
+        messages.success(request, "Produit ajouté avec succès")
         return redirect('invoice-detail', invoice_id=invoice.id)
 
     return render(request, 'invoices/add_product.html', {
         'form': form,
         'invoice': invoice,
     })
+
+@login_required
+@permission_required("invoices.change_invoiceout")
+def invoice_delete_product(request, invoice_id, product_id):
+    invoice_product = get_object_or_404(InvoiceOutProduct, invoice_id=invoice_id, id=product_id)
+    if request.method == "POST":
+        product = invoice_product.product
+        product.quantity += invoice_product.quantity
+        product.save()
+        invoice_product.delete()
+        messages.success(request, "Produit supprimé avec succès ")
+    return redirect('invoice-detail', invoice_id=invoice_id)
 
 
 @login_required
@@ -169,7 +182,7 @@ def invoice_add_service(request, invoice_id):
         if not created:
             invoice_service.quantity += quantity
             invoice_service.save()
-        messages.success(request, "Service successfully added")
+        messages.success(request, "Service ajouté avec succès")
         return redirect('invoice-detail', invoice_id=invoice.id)
 
     return render(request, 'invoices/add_service.html', {
@@ -177,17 +190,7 @@ def invoice_add_service(request, invoice_id):
         'invoice': invoice,
     })
 
-@login_required
-@permission_required("invoices.change_invoiceout")
-def invoice_delete_product(request, invoice_id, product_id):
-    invoice_product = get_object_or_404(InvoiceOutProduct, invoice_id=invoice_id, id=product_id)
-    if request.method == "POST":
-        product = invoice_product.product
-        product.quantity += invoice_product.quantity
-        product.save()
-        invoice_product.delete()
-        messages.success(request, "Invoice successfully deleted")
-    return redirect('invoice-detail', invoice_id=invoice_id)
+
 
 @login_required
 @permission_required("invoices.change_invoiceout")
@@ -195,7 +198,7 @@ def  invoice_delete_service(request, invoice_id, service_id):
     invoice_service = get_object_or_404(InvoiceOutService, invoice_id=invoice_id, id=service_id)
     if request.method == "POST":
         invoice_service.delete()
-        messages.success(request, "Service successfully deleted")
+        messages.success(request, "Service supprimé avec succès")
     return redirect('invoice-detail', invoice_id=invoice_id)
 
 @login_required

@@ -12,16 +12,15 @@
     <script defer src="{% static "js/tableActionsDropDown.js" %}"></script>
 
     <style>
-        .dashboard-header{
+        .dashboard-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: 8px;
             padding: 24px 0px;
             border-bottom: 1px solid #d4d7da;
-            margin-bottom: 12px;
 
-           .dashboard-create-button{
+            .dashboard-create-button {
                 display: flex;
                 gap: 8px;
                 font-size: 1.6rem;
@@ -35,70 +34,75 @@
                 font-weight: 600;
                 transition: all 0.4s ease-out;
                 cursor: pointer;
-                &:hover{
+
+                &:hover {
                     background-color: var(--primary-600);
                 }
             }
         }
 
-
         .dashboard-main{
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        .dashboard-best {
             display: grid;
             grid-template-columns: 1fr 1fr;
 
             gap: 32px;
         }
 
-        @media (max-width: 700px){
-            .dashboard-main{
-                grid-template-columns: 1fr ;
-            }
-        }
 
-        .top-box{
+
+        .top-best {
             background-color: var(--primary-0);
             border-radius: 7px;
-            box-shadow: 0px 2px 18px rgba(0,0,0,0.05);
+            box-shadow: 0px 2px 18px rgba(0, 0, 0, 0.05);
             border: 1px solid #d4d7da;
             display: flex;
             flex-direction: column;
-            .top-box-header{
+
+            .top-best-header {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
                 gap: 4px;
                 padding: 24px 28px;
                 border-bottom: 1px solid #d4d7da;
-                a{
+
+                a {
                     text-decoration: none;
                     display: block;
                     font-weight: 600;
-                    padding: 4px  12px;
+                    padding: 4px 12px;
                     border-radius: 5px;
                     color: #fff;
                     background-color: var(--primary-500);
                     transition: all 0.4s;
-                    &:hover{
+
+                    &:hover {
                         background-color: var(--primary-600);
                     }
                 }
-                h2{
+
+                h2 {
                     color: #555;
                 }
             }
 
-            .top-box-content{
-                .top-box-list{
+            .top-best-content {
+                .top-best-list {
                     list-style: none;
                     display: flex;
                     flex-direction: column;
                     font-weight: 600;
 
-                    li a{
+                    li a {
                         text-decoration: none;
                         color: inherit;
                         padding: 16px 28px;
-                        {#border-bottom: 1px solid #d4d7da;#}
                         display: flex;
                         justify-content: space-between;
                         align-items: center;
@@ -106,10 +110,11 @@
                         transition: all 0.4s;
 
 
-                        &:hover{
+                        &:hover {
                             background-color: var(--primary-100);
                         }
-                        .contribution{
+
+                        .contribution {
                             padding: 4px 12px;
                             border-radius: 1000px;
                             background-color: var(--primary-50);
@@ -119,13 +124,150 @@
                             display: flex;
                             align-items: center;
                             gap: 4px;
-                            span{
+
+                            span {
                                 letter-spacing: 1px;
                                 font-size: 1.2rem;
                             }
                         }
                     }
                 }
+            }
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+            gap: 24px;
+
+        }
+
+        .stat-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0px 2px 18px rgba(0, 0, 0, 0.05);
+            padding: 32px 20px;
+            transition: all 0.5s ease-out;
+            position: relative;
+            color: var(--primary-0);
+
+        }
+
+        .stat-card:hover {
+            transform:translate(0px,-5px) ;
+        }
+
+        .stat-card:hover i {
+            opacity: 0.5;
+        }
+
+        .stat-card i {
+            position: absolute;
+            font-size: 6rem;
+            margin-bottom: 15px;
+            color: #fff;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 10px;
+            opacity:0.3;
+            transition:all 0.3s ease-out;
+        }
+
+
+        .stat-card.invoices {
+            background: rgb(52,154,255);
+            background: linear-gradient(90deg, rgba(52,154,255,1) 1%, rgba(0,212,255,1) 100%);
+            background-size: 200%;
+
+
+        }
+
+        .stat-card.quotes {
+            background: rgb(224,180,50);
+            background: linear-gradient(90deg, rgba(224,180,50,1) 0%, rgba(247,226,7,1) 100%);
+            background-size: 200%;
+        }
+
+        .stat-card.purchase-orders {
+            background-color: #da5d5c;
+        }
+
+        .stat-card.clients {
+            background: rgb(89,86,214);
+            background: linear-gradient(90deg, rgba(89,86,214,1) 1%, rgba(143,86,214,1) 100%);
+            background-size: 200%;
+        }
+
+        .stat-card.montant{
+            background: rgb(110,231,102);
+            background: linear-gradient(90deg, rgba(110,231,102,1) 0%, rgba(172,224,50,1) 100%);
+            background-size: 200%;
+        }
+
+
+        .stat-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            opacity: 0.9;
+
+        }
+
+        .stat-card p {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        @media (max-width: 700px) {
+            .dashboard-best {
+                grid-template-columns: 1fr;
+            }
+            .dashboard-stats {
+                grid-template-columns: 1fr 1fr
+            }
+
+
+            .stat-card h3{
+                font-size: 1.8rem;
+            }
+
+            .stat-card p{
+                font-size: 3rem;
+            }
+        }
+
+        .filter-section{
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            padding: 6px 0px;
+        }
+
+        .filter-button{
+            padding: 6px 12px;
+            border-radius: 1000px;
+            background-color: #eee;
+            color: #333;
+            border:1px solid #ddd;
+            opacity: 0.5;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .filter-button.active{
+            background: var(--primary-50);
+            color: var(--primary-500);
+            border:1px solid var(--primary-500);
+            opacity: 1;
+        }
+
+        @media (max-width: 400px){
+            .dashboard-stats {
+                grid-template-columns: 1fr ;
             }
         }
     </style>
@@ -137,99 +279,170 @@
     <div class="dashboard-header">
         <h1>Dashboard</h1>
         {% if request.user|group:"Create" or request.user.is_superuser %}
-        <div class="actions-cell">
-            <button class="dashboard-create-button">
-                <i class="fa-solid fa-plus"></i>
-                Create
-            </button>
-            <div class="dropdown-menu">
-                {% if perms.clients.add_client %}
-                <a href="{% url 'create-client' %}" class="dropdown-item edit">
-                    <i class="fa-solid fa-user"></i>
-                    Client
-                </a>
-                {% endif %}
-                {% if perms.suppliers.add_supplier %}
-                <a href="{% url 'create-supplier' %}" class="dropdown-item edit">
-                    <i class="fa-solid fa-truck"></i>
-                    Supplier
-                </a>
-                {% endif %}
-            {% if perms.products.add_product %}
-                <a href="{% url 'create-product' %}" class="dropdown-item edit">
-                    <i class="fa-solid fa-boxes-stacked"></i>
-                    Product
-                </a>
-            {% endif %}
-            {% if perms.services.add_service %}
-                <a href="{% url 'create-service' %}" class="dropdown-item edit">
-                    <i class="fa-solid fa-headset"></i>
-                    Service
-                </a>
-            {% endif %}
-            {% if perms.invoices.add_invoiceout %}
-                <a href="{% url 'create-invoice' %}" class="dropdown-item edit">
-                    <i class="fa-solid fa-file-invoice-dollar"></i>
-                     Facture
-                </a>
-            {% endif %}
-             {% if perms.quotes.add_quoteout %}
-                <a href="{% url 'create-quote' %}" class="dropdown-item edit">
-                    <i class="fa-solid fa-file-invoice"></i>
-                     Devis
-                </a>
-            {% endif %}
-             {% if perms.purchase_orders.add_purchaseorderout %}
-                <a href="{% url 'create-purchase-order' %}" class="dropdown-item edit">
-                    <i class="fas fa-shopping-cart"></i>
-                     Bon de commande
-                </a>
+            <div class="actions-cell">
+                <button class="dashboard-create-button">
+                    <i class="fa-solid fa-plus"></i>
+                    Créer
+                </button>
+                <div class="dropdown-menu">
+                    {% if perms.clients.add_client %}
+                        <a href="{% url 'create-client' %}" class="dropdown-item edit">
+                            <i class="fa-solid fa-user"></i>
+                            Client
+                        </a>
+                    {% endif %}
+                    {% if perms.suppliers.add_supplier %}
+                        <a href="{% url 'create-supplier' %}" class="dropdown-item edit">
+                            <i class="fa-solid fa-truck"></i>
+                            Fournisseur
+                        </a>
+                    {% endif %}
+                    {% if perms.products.add_product %}
+                        <a href="{% url 'create-product' %}" class="dropdown-item edit">
+                            <i class="fa-solid fa-boxes-stacked"></i>
+                            Produit
+                        </a>
+                    {% endif %}
+                    {% if perms.services.add_service %}
+                        <a href="{% url 'create-service' %}" class="dropdown-item edit">
+                            <i class="fa-solid fa-headset"></i>
+                            Service
+                        </a>
+                    {% endif %}
+                    {% if perms.invoices.add_invoiceout %}
+                        <a href="{% url 'create-invoice' %}" class="dropdown-item edit">
+                            <i class="fa-solid fa-file-invoice-dollar"></i>
+                            Facture
+                        </a>
+                    {% endif %}
+                    {% if perms.quotes.add_quoteout %}
+                        <a href="{% url 'create-quote' %}" class="dropdown-item edit">
+                            <i class="fa-solid fa-file-invoice"></i>
+                            Devis
+                        </a>
+                    {% endif %}
+                    {% if perms.purchase_orders.add_purchaseorderout %}
+                        <a href="{% url 'create-purchase-order' %}" class="dropdown-item edit">
+                            <i class="fas fa-shopping-cart"></i>
+                            Bon de commande
+                        </a>
+                    {% endif %}
+                    {% if perms.invoices.add_invoiceout %}
+                        <a href="{% url 'create-demande-caution' %}" class="dropdown-item edit">
+                            <i class="fa-solid fa-file-contract"></i>
+                            Demande de caution
+                        </a>
+                    {% endif %}
+                    {% if perms.invoices.add_invoiceout %}
+                        <a href="{% url 'create-demande-virement' %}" class="dropdown-item edit">
+                            <i class="fa-solid fa-file-contract"></i>
+                            Demande de virement
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
         {% endif %}
-            </div>
-        </div>
-    {% endif %}
     </div>
+    <div class="filter-section">
+        <form method="get">
+            <input type="hidden" name="filter" value="7">
+            <button type="submit" class="filter-button {% if filter == '7' %}active{% endif %}">
+                7 jours
+            </button>
+        </form>
 
+        <form method="get">
+            <input type="hidden" name="filter" value="15">
+            <button type="submit" class="filter-button {% if filter == '15' %}active{% endif %}">
+                15 jours
+            </button>
+        </form>
+
+        <form method="get" >
+            <input type="hidden" name="filter" value="30">
+            <button type="submit" class="filter-button {% if filter == '30' %}active{% endif %}">
+                1 moins
+            </button>
+        </form>
+
+       <form method="get" >
+        <input type="hidden" name="filter" value="365">
+        <button type="submit" class="filter-button {% if filter == '365' %}active{% endif %}">
+            1 an
+        </button>
+        </form>
+    </div>
     <div class="dashboard-main">
-        <div class="top-box">
-           <div class="top-box-header">
-               <h2>Top Clients</h2>
-               <a href="{% url "clients-list" %}">See all</a>
-           </div>
-            <div class="top-box-content">
-               <ul class="top-box-list">
-                  {% for client in top_clients %}
-                      {% if client.contribution > 0 %}
-                          <li>
-                              <a href="{% url "invoices-list"%}?search={{ client.name }}">
-                                  <p>{{ client.name}} </p>
-                                  <p class="contribution"> {{client.contribution }} <span>Invoices</span></p>
-                              </a>
-                          </li>
-                      {% endif %}
+        <div class="dashboard-stats">
+            <div class="stat-card montant">
+                <i class="fas fa-money-bill-wave"></i>
+                <h3>Revenu total (TTC)</h3>
+                <p>{{ total_invoices_amount |format_currency}} DH</p>
+            </div>
+            <div class="stat-card clients">
+                <i class="fas fa-users"></i>
+                <h3>Clients</h3>
+                <p>{{ clients_count }}</p>
+            </div>
+            <div class="stat-card invoices">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <h3>Facture</h3>
+                <p>{{ invoices_count }}</p>
+            </div>
 
-                   {% endfor %}
-               </ul>
+
+            <div class="stat-card quotes">
+                <i class="fas fa-file-invoice"></i>
+                <h3>Devis</h3>
+                <p>{{ quotes_count }}</p>
             </div>
+
+
+
         </div>
-        <div class="top-box">
-            <div class="top-box-header">
-                <h2>Top Suppliers</h2>
-                <a href="{% url "suppliers-list" %}">See all</a>
+
+        <div class="dashboard-best">
+            <div class="top-best">
+                <div class="top-best-header">
+                    <h2>Top Clients</h2>
+                    <a href="{% url "clients-list" %}">Voir Tous</a>
+                </div>
+                <div class="top-best-content">
+                    <ul class="top-best-list">
+                        {% for client in top_clients %}
+                            {% if client.contribution > 0 %}
+                                <li>
+                                    <a href="{% url "invoices-list" %}?search={{ client.name }}">
+                                        <p>{{ client.name }} </p>
+                                        <p class="contribution"> {{ client.contribution }} <span>Factures</span></p>
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
-            <div class="top-box-content">
-                <ul class="top-box-list">
-                    {% for supplier in top_suppliers %}
-                        {% if supplier.contribution > 0 %}
-                        <li>
-                            <a href="{% url "purchase-orders-list"%}?search={{ supplier.name }}">
-                                <p>{{ supplier.name}} </p>
-                                <p class="contribution"> {{supplier.contribution }} <span>Purchase Orders</span></p>
-                            </a>
-                        </li>
-                         {% endif %}
-                    {% endfor %}
-                </ul>
+            <div class="top-best">
+                <div class="top-best-header">
+                    <h2>Top Fournisseurs</h2>
+                    <a href="{% url "suppliers-list" %}">Voir Tous</a>
+                </div>
+                <div class="top-best-content">
+                    <ul class="top-best-list">
+                        {% for supplier in top_suppliers %}
+                            {% if supplier.contribution > 0 %}
+                                <li>
+                                    <a href="{% url "purchase-orders-list" %}?search={{ supplier.name }}">
+                                        <p>{{ supplier.name }} </p>
+                                        <p class="contribution"> {{ supplier.contribution }} <span>Bon de commande</span>
+                                        </p>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

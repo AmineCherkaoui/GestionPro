@@ -15,25 +15,29 @@ class PurchaseOrderOutForm(forms.ModelForm):
             )
         }
 
+        labels={
+            "date":"Date du bon de commande",
+            "supplier":"Fournisseur",
+        }
+
 
 class AddProductForm(forms.ModelForm):
-    product = forms.ModelChoiceField(queryset=Product.objects.all().order_by('name'))
-    quantity = forms.IntegerField(min_value=1, label="Quantity")
+    product = forms.ModelChoiceField(queryset=Product.objects.all().order_by('name'),label="Produit")
+    quantity = forms.IntegerField(min_value=1, label="Quantité")
 
     class Meta:
         model = PurchaseOrderOutProduct
         fields = ['product', 'quantity']
-        widgets = {
-            'quantity': forms.NumberInput(attrs={'min': 1})
-        }
+
 
 
 
 
 class AddServiceForm(forms.ModelForm):
     service = forms.ModelChoiceField(queryset=Service.objects.all().order_by('name'))
-    quantity = forms.IntegerField(min_value=1, label="Quantity")
+    quantity = forms.IntegerField(min_value=1,label="Quantité")
 
     class Meta:
         model = PurchaseOrderOutService
         fields = ['service', 'quantity']
+

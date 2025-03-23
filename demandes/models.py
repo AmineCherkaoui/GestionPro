@@ -53,7 +53,7 @@ class DemandeCaution(models.Model):
 
 class DemandeVirement(models.Model):
     titulaire = models.CharField(max_length=50, verbose_name="Titulaire")
-    rib = models.CharField(max_length=24, null=False,validators=[MinLengthValidator(24, 'the rib must contain 24 numbers')])
+    rib = models.CharField(max_length=24, null=False,verbose_name="RIB",validators=[MinLengthValidator(24, 'the rib must contain 24 numbers')])
     montant=models.DecimalField(max_digits=15, decimal_places=2)
     date = models.DateField(auto_now_add=True)
 

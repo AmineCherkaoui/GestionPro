@@ -21,14 +21,13 @@
         {% if perms.services.add_service %}
         <a class="btn-icon" href="{% url "create-service" %}">
             <i class="fa-solid fa-plus"></i>
-            Add new
         </a>
     {% endif %}
     </div>
 
     <div class="list-container">
         <form class="search-box" method="get" action="{% url 'services-list' %}">
-            <input type="text" name="search" placeholder="Search by name" value="{{ search | default:"" }}">
+            <input type="text" name="search" placeholder="Recherche" value="{{ search | default:"" }}">
             <button type="submit">
                 <i class="fa-solid fa-magnifying-glass"></i>
             </button>
@@ -38,9 +37,9 @@
             <table>
             <thead>
             <tr>
-                <th>Name</th>
-                <th>description</th>
-                <th>Price</th>
+                <th>Nom</th>
+                <th>Description</th>
+                <th>Prix</th>
                 {% if perms.services.change_service or perms.services.delete_service  %}
                     <th>Actions</th>
                 {% endif %}
@@ -59,7 +58,7 @@
                             {% if perms.services.change_service %}
                             <a href="{% url 'edit-service' service.id %}" class="dropdown-item edit">
                                <i class="fa-solid fa-pen-to-square"></i>
-                                Edit
+                                Modifier
                             </a>
                             {% endif %}
                             {% if perms.services.delete_service %}
@@ -67,7 +66,7 @@
                                 {% csrf_token %}
                                 <button type="button" class="dropdown-item delete" data-id="{{ service.id }}" data-name="{{ service.name }}">
                                     <i class="fa-solid fa-trash"></i>
-                                    Delete
+                                    Supprimer
                                 </button>
                             </form>
                             {% endif %}
@@ -78,7 +77,7 @@
             {% empty %}
                 <tr>
                     <td colspan="100%">
-                        No service found.
+                        Aucun service trouvé.
                     </td>
                 </tr>
             {% endfor %}

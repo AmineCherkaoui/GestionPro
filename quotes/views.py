@@ -10,12 +10,12 @@ from django.template.loader import render_to_string
 from .models import QuoteOut, QuoteOutProduct, QuoteOutService
 from invoices.models import InvoiceOut,InvoiceOutProduct,InvoiceOutService
 from .forms import QuoteOutForm, AddProductForm, AddServiceForm
-from settings.models import Settings
 
-from decimal import Decimal
 from weasyprint import HTML
 from num2words import num2words
-from datetime import date
+
+from django.db.models import Q
+
 
 
 # Create your views here.
@@ -24,7 +24,7 @@ def quotes_list(request):
     search = request.GET.get('search')
     quotes = QuoteOut.objects.all().select_related("client").order_by("-id")
     if search:
-        quotes = quotes.filter(client__name__icontains=search)
+        quotes = quotes.filter(Q(client__name__icontains=search) | Q(id__icontains=search))
 
     paginator = Paginator(quotes, 7)
     page = request.GET.get('page')
@@ -72,7 +72,7 @@ def create_quote(request):
                         quote_service = form.save(commit=False)
                         quote_service.quote = quote
                         quote_service.save()
-            messages.success(request,"Quote successfully created")
+            messages.success(request,"Devis créé avec succès")
             return redirect('quotes-list')
 
     else:
@@ -93,7 +93,7 @@ def delete_quote(request, quote_id):
     quote = get_object_or_404(QuoteOut, id=quote_id)
     if request.method == "POST":
         quote.delete()
-        messages.success(request,"Quote successfully deleted")
+        messages.success(request,"Devis supprimé avec succès")
     return redirect("quotes-list")
 
 
@@ -127,7 +127,7 @@ def quote_add_product(request,quote_id):
         if not created:
             quote_product.quantity += quantity
             quote_product.save()
-        messages.success(request,f"Product successfully added")
+        messages.success(request,f"Produit ajouté avec succès")
         return redirect('quote-detail', quote_id=quote.id)
 
     return render(request, 'quotes/add_product.html', {
@@ -135,6 +135,14 @@ def quote_add_product(request,quote_id):
         'quote': quote,
     })
 
+@login_required
+@permission_required("quotes.change_quoteout")
+def quote_delete_product(request, quote_id, product_id):
+    if request.method == "POST":
+        quote_product = get_object_or_404(QuoteOutProduct, quote_id=quote_id, id=product_id)
+        quote_product.delete()
+        messages.success(request,f"Produit supprimé avec succès")
+    return redirect('quote-detail', quote_id=quote_id)
 
 @login_required
 @permission_required("quotes.change_quoteout")
@@ -155,7 +163,7 @@ def quote_add_service(request, quote_id):
         if not created:
             quote_service.quantity += quantity
             quote_service.save()
-        messages.success(request,f"Service successfully added")
+        messages.success(request,f"Service ajouté avec succès")
         return redirect('quote-detail', quote_id=quote.id)
 
     return render(request, 'quotes/add_service.html', {
@@ -163,14 +171,7 @@ def quote_add_service(request, quote_id):
         'quote': quote,
     })
 
-@login_required
-@permission_required("quotes.change_quoteout")
-def quote_delete_product(request, quote_id, product_id):
-    if request.method == "POST":
-        quote_product = get_object_or_404(QuoteOutProduct, quote_id=quote_id, id=product_id)
-        quote_product.delete()
-        messages.success(request,f"Product successfully deleted")
-    return redirect('quote-detail', quote_id=quote_id)
+
 
 @login_required
 @permission_required("quotes.change_quoteout")
@@ -178,7 +179,7 @@ def  quote_delete_service(request, quote_id, service_id):
     quote_service = get_object_or_404(QuoteOutService, quote_id=quote_id, id=service_id)
     if request.method == "POST":
         quote_service.delete()
-        messages.success(request,f"Service successfully deleted")
+        messages.success(request,f"Service supprimé avec succès")
     return redirect('quote-detail', quote_id=quote_id)
 
 @login_required
@@ -205,11 +206,11 @@ def quote_pdf(request,quote_id):
     return response
 
 @login_required
-@permission_required("quotes.add_quoteout")
+@permission_required("quotes.change_quoteout")
 def convert_quote_to_invoice(request, quote_id):
     quote = get_object_or_404(QuoteOut, id=quote_id)
     if quote.is_converted:
-        messages.warning(request, "This quote has already been converted to an invoice.")
+        messages.warning(request, "Ce devis a déjà été converti en facture.")
         return redirect('quote-detail', quote_id=quote.id)
     try:
         invoice = InvoiceOut.objects.create(
@@ -233,11 +234,11 @@ def convert_quote_to_invoice(request, quote_id):
         quote.is_converted = True
         quote.invoice_id = invoice.id
         quote.save()
-        messages.success(request, "Quote successfully converted to invoice.")
+        messages.success(request, "Devis converti avec succès en facture.")
         return redirect('invoice-detail', invoice_id=invoice.id)
 
     except Exception as e:
-        messages.error(request, f"An error occurred while converting the quote: {str(e)}")
+        messages.error(request, f"Une erreur s'est produite lors de la conversion du devis: {str(e)}")
         return redirect('quotes-list')
 
 

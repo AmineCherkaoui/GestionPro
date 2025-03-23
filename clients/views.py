@@ -29,7 +29,7 @@ def create_client(request):
         form = ClientForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request,"Client successfully created")
+            messages.success(request,"Client créé avec succès")
             return redirect('clients-list')
 
     return render(request, 'clients/create.html', {'form': form})
@@ -42,7 +42,7 @@ def edit_client(request, client_id):
         form = ClientForm(request.POST, instance=client)
         if form.is_valid():
             form.save()
-            messages.success(request,"Client successfully updated")
+            messages.success(request,"Client modifié avec succès")
             return redirect('clients-list')
     else:
         form = ClientForm(instance=client)
@@ -54,7 +54,7 @@ def delete_client(request, client_id):
     client = get_object_or_404(Client, id=client_id)
     if request.method == 'POST':
         client.delete()
-        messages.success(request, "Client successfully deleted")
+        messages.success(request, "Client supprimé avec succès")
     return redirect('clients-list')
 
 

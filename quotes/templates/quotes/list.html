@@ -22,14 +22,13 @@
     {% if perms.quotes.add_quoteout %}
         <a class="btn-icon" href="{% url "create-quote" %}">
             <i class="fa-solid fa-plus"></i>
-            Add new
         </a>
     {% endif %}
     </div>
 
     <div class="list-container">
         <form class="search-box" method="get" action="{% url 'quotes-list' %}">
-            <input type="text" name="search" placeholder="Search by name" value="{{ search | default:"" }}">
+            <input type="text" name="search" placeholder="Recherche" value="{{ search | default:"" }}">
             <button type="submit">
                <i class="fa-solid fa-magnifying-glass"></i>
             </button>
@@ -44,7 +43,7 @@
                 <th>Client</th>
                 <th>Total HT</th>
                 <th>Total TTC</th>
-                <th>Status</th>
+                <th>État</th>
                 <th>Actions</th>
             </tr>
             </thead>
@@ -56,36 +55,36 @@
                     <td>{{ quote.client }}</td>
                     <td>{{ quote.total_ht|format_currency }} MAD</td>
                     <td>{{ quote.total_ttc|format_currency }} MAD</td>
-                    <td><p class="type">{% if quote.is_converted %} Converted {% else %} Not converted {% endif %}</p></td>
+                    <td><p class="status {% if quote.is_converted %}active{% endif %}">{% if quote.is_converted %} Converti {% else %}Non converti{% endif %}</p></td>
                     <td class="actions-cell">
                         <button class="actions-button"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                         <div class="dropdown-menu">
                             <a href="{% url 'quote-pdf' quote.id %}" class="dropdown-item edit">
                               <i class="fa-solid fa-file-pdf"></i>
-                                Print
+                                Imprimer
                             </a>
-                            {% if not quote.is_converted %}
+                            {% if not quote.is_converted and perms.quotes.change_quoteout  %}
                             <a href="{% url 'quote-to-invoice' quote.id %}" class="dropdown-item edit">
                                 <i class="fa-solid fa-right-left"></i>
-                                Convert to invoice
+                                Convertir à une facture
                             </a>
-                            {% else %}
+                            {% elif quote.is_converted  %}
                                 <a href="{% url 'invoice-detail' quote.invoice_id %}" class="dropdown-item edit">
                                     <i class="fas fa-file-invoice-dollar"></i>
-                                    Go to the invoice
+                                    Aller à la facture
                                 </a>
                             {% endif %}
                             <a href="{% url 'quote-detail' quote.id %}" class="dropdown-item edit">
                              <i class="fa-solid fa-ellipsis"></i>
 
-                                Details
+                                Detail
                             </a>
                            {% if perms.quotes.delete_quoteout %}
                                <form class="delete-form" action="{% url 'delete-quote' quote.id %}" method="post" style="display: inline;">
                                    {% csrf_token %}
                                    <button type="button" class="dropdown-item delete" data-id="{{ quote.id }}" data-name="{{ quote.id }}/OT/{{ quote.date|date:"Y" }}">
                                        <i class="fa-solid fa-trash"></i>
-                                       Delete
+                                       Supprimer
                                    </button>
                                </form>
                                {% endif %}
@@ -95,7 +94,7 @@
             {% empty %}
                 <tr>
                     <td colspan="100%">
-                        No quote found.
+                        Aucun devis trouvé.
                     </td>
                 </tr>
             {% endfor %}

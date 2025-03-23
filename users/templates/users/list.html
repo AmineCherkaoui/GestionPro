@@ -87,7 +87,6 @@
         {% if perms.auth.add_user %}
             <a class="btn-icon" href="{% url "create-user" %}">
                 <i class="fa-solid fa-plus"></i>
-                Add new
             </a>
         {% endif %}
     </div>
@@ -104,9 +103,9 @@
             <table>
                 <thead>
                 <tr>
-                    <th>Username</th>
+                    <th>Utilisateur</th>
                      <th>Email</th>
-                    <th>Status</th>
+                    <th>État</th>
                     <th>Permissions</th>
                     <th>Actions</th>
                 </tr>
@@ -115,29 +114,29 @@
                 {% for user in users %}
                     <tr>
                         <td class="name">{{ user.username }}</td>
-                        <td>{% if user.email %} {{ user.email }} {% else %} <span class="empty">empty</span> {% endif %}</td>
+                        <td>{% if user.email %} {{ user.email }} {% else %} <span class="empty">vide</span> {% endif %}</td>
                         <td class="status">
                             {% if user.is_active %}
-                                <span class="active">Active</span>
+                                <span class="active">activé</span>
                             {% else %}
-                                <span class="inactive">Inactive</span>
+                                <span class="inactive">désactivé</span>
                             {% endif %}
                         </td>
                         <td class="permission">
                             {% if user.is_superuser %}
-                                <span class="superuser">Superuser</span>
+                                <span class="superuser">admin</span>
                             {% else %}
                                 {% if user|group:"Create" %}
-                                    <span class="create">Create</span>
+                                    <span class="create">créer</span>
                                 {% endif %}
                                 {% if user|group:"Update" %}
-                                    <span class="update">Update</span>
+                                    <span class="update">modifier</span>
                                 {% endif %}
                                 {% if user|group:"Delete" %}
-                                    <span class="delete">Delete</span>
+                                    <span class="delete">supprimer</span>
                                 {% endif %}
                                 {% if not user|group:"Create" and not user|group:"Update" and not user|group:"Delete" %}
-                                    <span class="none">None</span>
+                                    <span class="none">aucune</span>
                                 {% endif %}
 
                             {% endif %}
@@ -150,14 +149,14 @@
 
                                             <a href="{% url 'edit-user' user.id %}" class="dropdown-item edit">
                                                 <i class="fa-solid fa-pen-to-square"></i>
-                                                Edit
+                                                Modifier
                                             </a>
                                         {% if user.id != request.user.id %}
                                         <form  action="{% url 'change-user-status' user.id %}" method="post" style="display: inline;">
                                             {% csrf_token %}
                                             <button type="submit" class="dropdown-item edit" data-id="{{ user.id }}" data-name="{{ user.username }}">
                                                 <i class="fa-solid {% if user.is_active %}fa-user-slash{% else %}fa-user-check{% endif %}"></i>
-                                                {% if user.is_active %}Deactivate{% else %}Activate{% endif %}
+                                                {% if user.is_active %}Desactiver{% else %}Activater{% endif %}
                                             </button>
                                         </form>
 
@@ -165,8 +164,8 @@
                                             <form class="delete-form" action="{% url 'delete-user' user.id %}" method="post" style="display: inline;">
                                                 {% csrf_token %}
                                                 <button type="button" class="dropdown-item delete" data-id="{{ user.id }}" data-name="{{ user.username }}">
-                                                    <i class="fa-solid fa-trash"></i>
-                                                    Delete
+                                                    <i class="fa-solid fa-user-minus"></i>
+                                                    Supprimer
                                                 </button>
                                             </form>
                                         {% endif %}
@@ -178,7 +177,7 @@
                 {% empty %}
                     <tr>
                         <td colspan="100%">
-                            No users found.
+                            Aucun utilisateur trouvé
                         </td>
                     </tr>
                 {% endfor %}

@@ -35,7 +35,7 @@ def create_demande_caution(request):
     if request.method == "POST":
         if form.is_valid():
             form.save()
-            messages.success(request,"Demande de caution successfully created")
+            messages.success(request,"Demande de caution créée avec succès")
             return redirect("demandes-caution-list")
 
     return render(request,"demande_caution/create.html",{"form":form})
@@ -46,7 +46,7 @@ def edit_demande_caution(request, demande_caution_id):
     form = DemandeCautionForm(request.POST or None, instance=demande_caution)
     if form.is_valid():
             form.save()
-            messages.success(request,"Demande de caution successfully updated")
+            messages.success(request,"Demande de caution modifiée avec succès")
             return redirect('demandes-caution-list')
 
 
@@ -57,7 +57,7 @@ def delete_demande_caution(request, demande_caution_id):
     demande_caution = get_object_or_404(DemandeCaution, id=demande_caution_id)
     if request.method == 'POST':
         demande_caution.delete()
-        messages.success(request, "Demande de caution successfully deleted")
+        messages.success(request, "Demande de caution supprimée avec succès")
     return redirect('demandes-caution-list')
 @login_required
 def demande_caution_pdf(request,demande_caution_id):
@@ -106,7 +106,7 @@ def create_demande_virement(request):
     if request.method == "POST":
         if form.is_valid():
             form.save()
-            messages.success(request,"Demande de virement successfully created")
+            messages.success(request,"Demande de virement créée avec succès")
             return redirect("demande-virement-list")
 
     return render(request,"demande_virement/create.html",{"form":form})
@@ -118,7 +118,7 @@ def edit_demande_virement(request, demande_virement_id):
     form = DemandeVirementForm(request.POST or None, instance=demande_virement)
     if form.is_valid():
         form.save()
-        messages.success(request,"Demande de virement successfully updated")
+        messages.success(request,"Demande de virement modifiée avec succès")
         return redirect('demande-virement-list')
 
 
@@ -131,7 +131,7 @@ def delete_demande_virement(request, demande_virement_id):
     demande_caution = get_object_or_404(DemandeVirement, id=demande_virement_id)
     if request.method == 'POST':
         demande_caution.delete()
-        messages.success(request, "Demande de virement successfully deleted")
+        messages.success(request, "Demande de virement supprimée avec succès")
     return redirect('demande-virement-list')
 
 @login_required

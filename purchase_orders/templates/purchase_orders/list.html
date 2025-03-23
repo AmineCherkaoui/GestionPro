@@ -21,14 +21,13 @@
         {% if perms.purchase_orders.add_purchaseorderout %}
         <a class="btn-icon" href="{% url "create-purchase-order" %}">
             <i class="fa-solid fa-plus"></i>
-            Add new
         </a>
      {% endif %}
     </div>
 
     <div class="list-container">
         <form class="search-box" method="get" action="{% url 'purchase-orders-list' %}">
-            <input type="text" name="search" placeholder="Search by name" value="{{ search | default:"" }}">
+            <input type="text" name="search" placeholder="Recherche" value="{{ search | default:"" }}">
             <button type="submit">
                 <i class="fa-solid fa-magnifying-glass"></i>
             </button>
@@ -40,7 +39,7 @@
                 <tr>
                     <th>N°</th>
                     <th>Date</th>
-                    <th>Supplier</th>
+                    <th>Fournisseur</th>
                     <th>Total HT</th>
                     <th>Total TTC</th>
                     <th>Actions</th>
@@ -62,13 +61,13 @@
                                     <a href="{% url 'purchase-order-pdf' purchase_order.id %}"
                                        class="dropdown-item edit">
                                         <i class="fa-solid fa-file-pdf"></i>
-                                        Print
+                                        Imprimer
                                     </a>
                                     <a href="{% url 'purchase-order-detail' purchase_order.id %}"
                                        class="dropdown-item edit">
                                         <i class="fa-solid fa-ellipsis"></i>
 
-                                        Details
+                                        Detail
                                     </a>
 
 
@@ -81,7 +80,7 @@
                                                     data-id="{{ purchase_order.id }}"
                                                     data-name="{{ purchase_order.id }}/OT/{{ purchase_order.date|date:"Y" }}">
                                                 <i class="fa-solid fa-trash"></i>
-                                                Delete
+                                                Supprimer
                                             </button>
                                         </form>
                                     {% endif %}
@@ -92,7 +91,7 @@
                 {% empty %}
                     <tr>
                         <td colspan="100%">
-                            No purchase order found.
+                            Aucun bon de commande trouvé.
                         </td>
                     </tr>
                 {% endfor %}

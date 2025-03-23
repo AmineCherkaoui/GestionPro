@@ -33,7 +33,7 @@
         <div>
             <div class="invoice-header">
                 <h2>Produits</h2>
-                <button type="button" id="add-product">Add Produit</button>
+                <button type="button" id="add-product">Ajouter Produit</button>
             </div>
             {% if messages %}
                 {% for message in messages %}
@@ -45,9 +45,6 @@
                 {% for form in product_form %}
                     <div class="product-form">
                         {{ form.as_div }}
-                        {% if form.instance.id %}
-                            <button type="button" class="remove-product">Remove</button>
-                        {% endif %}
                     </div>
                 {% endfor %}
             </div>
@@ -56,22 +53,19 @@
         <div>
             <div class="invoice-header">
                 <h2>Services</h2>
-                <button type="button" id="add-service">Add Service</button>
+                <button type="button" id="add-service">Ajouter Service</button>
             </div>
             <div id="service-forms">
                 {{ service_form.management_form }}
                 {% for form in service_form %}
                     <div class="service-form">
                         {{ form.as_div }}
-                        {% if form.instance.id %}
-                            <button type="button" class="remove-service">Remove</button>
-                        {% endif %}
                     </div>
                 {% endfor %}
             </div>
         </div>
 
-        <button type="submit">Save Facture</button>
+        <button type="submit">Save</button>
     </form>
 
     <script>
@@ -89,7 +83,7 @@
             let removeButton = document.createElement('button');
             removeButton.type = 'button';
             removeButton.classList.add('remove-' + formType);
-            removeButton.textContent = 'Remove';
+            removeButton.textContent = 'Retirer';
 
             newForm.appendChild(removeButton);
             container.appendChild(newForm);

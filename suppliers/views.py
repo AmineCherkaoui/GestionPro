@@ -29,7 +29,7 @@ def create_supplier(request):
         form = SupplierForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request,"Supplier created successfully")
+            messages.success(request,"Fournisseur créé avec succès")
             return redirect('suppliers-list')
 
     return render(request, 'suppliers/create.html', {'form': form})
@@ -42,7 +42,7 @@ def edit_supplier(request, supplier_id):
         form = SupplierForm(request.POST, instance=supplier)
         if form.is_valid():
             form.save()
-            messages.success(request,"Supplier successfully updated")
+            messages.success(request,"Fournisseur modifié avec succès")
             return redirect('suppliers-list')
     else:
         form = SupplierForm(instance=supplier)
@@ -54,5 +54,5 @@ def delete_supplier(request, supplier_id):
     supplier = get_object_or_404(Supplier, id=supplier_id)
     if request.method == 'POST':
         supplier.delete()
-        messages.success(request,"Supplier successfully deleted")
+        messages.success(request,"Fournisseur supprimé avec succès")
     return redirect('suppliers-list')

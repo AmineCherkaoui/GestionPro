@@ -42,7 +42,7 @@ def create_user(request):
     if request.method == "POST":
         if form.is_valid():
             form.save()
-            messages.success(request,"User successfully created")
+            messages.success(request,"Utilisateur créé avec succès")
             return redirect("users-list")
     return render(request,"users/create.html",{"form":form})
 @login_required
@@ -54,7 +54,7 @@ def edit_user(request, user_id):
         form = UserEditForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
-            messages.success(request,"User successfully updated")
+            messages.success(request,"Utilisateur modifié avec succès")
             return redirect('users-list')
     else:
         form = UserEditForm(instance=user)
@@ -67,7 +67,7 @@ def delete_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
     if request.method == 'POST':
         user.delete()
-        messages.success(request, "User successfully deleted")
+        messages.success(request, "Utilisateur supprimé avec succès")
     return redirect('users-list')
 
 @login_required
@@ -78,6 +78,6 @@ def toggle_active_user(request, user_id):
     if request.method == 'POST':
         user.is_active = not user.is_active
         user.save()
-        status = "activated" if user.is_active else "deactivated"
-        messages.success(request, f"User successfully {status}")
+        status = "activé" if user.is_active else "désactivé"
+        messages.success(request, f"Utilisateur {status} avec succès")
     return redirect('users-list')

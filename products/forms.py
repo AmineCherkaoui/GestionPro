@@ -7,6 +7,13 @@ class ProductForm(ModelForm):
     class Meta:
         model = Product
         fields = "__all__"
+        labels={
+            "name":" Nom du produit",
+            "description":"Description",
+            "price":"Prix",
+            "quantity":" Quantité",
+
+        }
 
     def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)

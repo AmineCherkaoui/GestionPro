@@ -114,20 +114,20 @@
             <h2>Permissions</h2>
             <section class="permissions-checkboxes">
                 <label class="create">
-                    Create
+                    Créer
                     <input type="checkbox" name="ALL_ADD" {% if form.ALL_ADD.value %}checked{% endif %}>
                 </label>
                 <label class="update">
-                    Update
+                    Modifier
                     <input type="checkbox" name="ALL_CHANGE" {% if form.ALL_CHANGE.value %}checked{% endif %}>
                 </label>
                 <label class="delete">
-                    Delete
+                    Supprimer
                     <input type="checkbox" name="ALL_DELETE" {% if form.ALL_DELETE.value %}checked{% endif %}>
                 </label>
                 <label class="superuser">
                     <input type="checkbox" name="is_superuser" {% if form.instance.is_superuser %}checked{% endif %}>
-                    <span>Superuser</span>
+                    <span>Admin</span>
                 </label>
             </section>
         </section>
@@ -145,6 +145,6 @@
 
 
 
-        <button type="submit">Save</button>
+        <button type="submit">Sauvegarder</button>
     </form>
 {% endblock %}

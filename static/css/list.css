@@ -59,13 +59,22 @@ td.name {
     font-weight: 600;
 }
 
-td .type {
+td .status {
     font-weight: bold;
-    background-color: var(--primary-50);
+
     width: max-content;
     padding: 4px 8px;
     border-radius: 1000px;
+
+    background-color: #eee;
+    color: #333;
+    opacity: 0.5;
+}
+
+td .status.active {
+    background-color: var(--primary-50);
     color: var(--primary-500);
+    opacity: 1;
 }
 
 .actions-cell {
@@ -259,14 +268,15 @@ td .type {
     align-self: end;
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 12px;
     text-decoration: none;
-    font-weight: 600;
     padding: 6px 8px;
     background-color: var(--primary-500);
     color: #fff;
     border-radius: 5px;
+    font-size: 2.4rem;
     transition: all 0.4s;
+
 }
 
 .btn-icon:hover {

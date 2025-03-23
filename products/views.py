@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Product
 from .forms import ProductForm
+from django.db.models import Q
 
 # Create your views here.
 
@@ -12,7 +13,7 @@ def products_list(request):
     search = request.GET.get('search')
     products = Product.objects.all().order_by('-id')
     if search:
-        products = products.filter(name__icontains=search)
+        products = products.filter(Q(name__icontains=search) | Q(description__icontains=search))
     pagination = Paginator(products, 7)
     page = request.GET.get('page')
     products = pagination.get_page(page)
@@ -25,7 +26,7 @@ def create_product(request):
     if request.method == "POST":
         if form.is_valid():
             form.save()
-            messages.success(request,"Product successfully created")
+            messages.success(request,"Produit créé avec succès")
             return redirect("products-list")
     return render(request, 'products/create.html', {'form': form})
 
@@ -39,7 +40,7 @@ def edit_product(request, product_id):
     form = ProductForm(request.POST or None, instance=product,user=request.user)
     if form.is_valid():
         form.save()
-        messages.success(request,"Product successfully updated")
+        messages.success(request,"Produit modifié avec succès")
         return redirect("products-list")
     return render(request, 'products/create.html', {'form': form})
         
@@ -49,5 +50,5 @@ def delete_product(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     if request.method == 'POST':
         product.delete()
-        messages.success(request,"Product successfully deleted")
+        messages.success(request,"Produit supprimé avec succès")
     return redirect("products-list")

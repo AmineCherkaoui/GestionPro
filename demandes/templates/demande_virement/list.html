@@ -22,14 +22,13 @@
         {% if perms.demandes.add_demandevirement %}
         <a class="btn-icon" href="{% url "create-demande-virement" %}">
             <i class="fa-solid fa-plus"></i>
-            Add new
         </a>
         {% endif %}
     </div>
 
     <div class="list-container">
         <form class="search-box" method="get" action="{% url 'demande-virement-list' %}">
-            <input type="text" name="search" placeholder="Search by name" value="{{ search | default:"" }}">
+            <input type="text" name="search" placeholder="Recherche" value="{{ search | default:"" }}">
             <button type="submit">
                 <i class="fa-solid fa-magnifying-glass"></i>
             </button>
@@ -62,12 +61,12 @@
 
                             <a href="{% url 'demande-virement-pdf' demande_virement.id %}" class="dropdown-item edit">
                                 <i class="fa-solid fa-file-pdf"></i>
-                                Print
+                                Imprimer
                             </a>
                             {% if perms.demandes.change_demandevirement  %}
                             <a href="{% url 'edit-demande-virement' demande_virement.id %}" class="dropdown-item edit">
                                 <i class="fa-solid fa-pen-to-square"></i>
-                                Edit
+                                Modifier
                             </a>
                                 {% endif %}
 
@@ -76,7 +75,7 @@
                                 {% csrf_token %}
                                 <button type="button" class="dropdown-item delete" data-id="{{ demande_virement.id }}" data-name="{{ demande_virement.titulaire }}">
                                     <i class="fa-solid fa-trash"></i>
-                                    Delete
+                                    Supprimer
                                 </button>
                             </form>
                             {% endif %}
@@ -87,7 +86,7 @@
             {% empty %}
                 <tr>
                     <td colspan="100%">
-                        Aucune demande de virement banquire trouvé
+                        Aucune demande de virement banquire trouvé.
                     </td>
                 </tr>
             {% endfor %}

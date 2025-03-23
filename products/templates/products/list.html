@@ -21,14 +21,13 @@
         {% if perms.products.add_product %}
         <a class="btn-icon" href="{% url "create-product" %}">
             <i class="fa-solid fa-plus"></i>
-            Add new
         </a>
     {% endif %}
     </div>
 
     <div class="list-container">
         <form class="search-box" method="get" action="{% url 'products-list' %}">
-            <input type="text" name="search" placeholder="Search by name" value="{{ search | default:"" }}">
+            <input type="text" name="search" placeholder="Recherche" value="{{ search | default:"" }}">
             <button type="submit">
                 <i class="fa-solid fa-magnifying-glass"></i>
             </button>
@@ -38,10 +37,10 @@
                 <table>
                 <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>description</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
+                    <th>Nom</th>
+                    <th>Description</th>
+                    <th>Prix</th>
+                    <th>Stock</th>
                     {% if perms.products.change_product or perms.products.delete_product %}
                     <th>Actions</th>
                     {% endif %}
@@ -63,7 +62,7 @@
                                 {% if perms.products.change_product %}
                                 <a href="{% url 'edit-product' product.id %}" class="dropdown-item edit">
                                     <i class="fa-solid fa-pen-to-square"></i>
-                                    Edit
+                                    Modifier
                                 </a>
                                 {% endif %}
                                 {% if perms.products.delete_product %}
@@ -71,7 +70,7 @@
                                     {% csrf_token %}
                                     <button type="button" class="dropdown-item delete" data-id="{{ product.id }}" data-name="{{ product.name }}">
                                         <i class="fa-solid fa-trash"></i>
-                                        Delete
+                                        Supprimer
                                     </button>
                                 </form>
                                 {% endif %}
@@ -82,7 +81,7 @@
                 {% empty %}
                     <tr>
                         <td colspan="100%">
-                            No product found.
+                            Aucun produit trouvé.
                         </td>
                     </tr>
                 {% endfor %}
