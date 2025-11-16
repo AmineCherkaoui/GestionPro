@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.13-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-dev \
     python3-cffi \
     python3-brotli \
-    libgdk-pixbuf2.0-0 \
+    libgdk-pixbuf-xlib-2.0-0 \
     libpango1.0-dev \
     shared-mime-info \
     && echo "fr_FR.UTF-8 UTF-8" > /etc/locale.gen \
@@ -47,7 +47,7 @@ COPY ./fonts/ /usr/share/fonts/
 # Configure Apache
 COPY ./config/apache-django.conf /etc/apache2/sites-available
 RUN a2ensite apache-django.conf && a2dissite 000-default.conf
-RUN a2ensite apache-django.conf && a2enmod wsgi rewrite
+RUN a2enmod wsgi rewrite
 
 # Set up media folder and permissions for Apache logs and fonts
 RUN mkdir -p /app/media && chown -R www-data:www-data /app/media && chmod -R 755 /app/media
@@ -56,16 +56,11 @@ RUN mkdir -p /var/run/apache2 && chown -R www-data:www-data /var/run/apache2 && 
 RUN chown -R www-data:www-data /var/log/apache2 && chmod -R 755 /var/log/apache2
 RUN chown -R www-data:www-data /usr/share/fonts && chmod -R 755 /usr/share/fonts
 
-
-
 # Fix entrypoint path and permissions
 RUN chmod +x /app/entrypoint.sh
 
 # Add ServerName to suppress warning
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
-
-# Make sure Apache runs as 'www-data'
-USER www-data
 
 EXPOSE 80
 

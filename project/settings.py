@@ -14,8 +14,8 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
-load_dotenv('.env.local')
-
+env_file = ".env.local" if os.getenv("DJANGO_ENV") == "development" else ".env.prod"
+load_dotenv(env_file)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = (os.environ.get('DEBUG') == "True")
+DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1")
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS","127.0.0.1").split(",")
 
 
@@ -94,16 +94,15 @@ WSGI_APPLICATION = 'project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+ENGINE = os.getenv("DATABASE_ENGINE", "sqlite3")
 DATABASES = {
-     'default': {
-         'ENGINE': 'django.db.backends.{}'.format(
-             os.getenv('DATABASE_ENGINE', 'sqlite3')
-         ),
-         'NAME': os.getenv('DATABASE_NAME', 'demo'),
-         'USER': os.getenv('DATABASE_USERNAME', 'root'),
-         'PASSWORD': os.getenv('DATABASE_PASSWORD', 'root'),
-         'HOST': os.getenv('DATABASE_HOST', '127.0.0.1'),
-         'PORT': int(os.getenv('DATABASE_PORT', 3306)),
+    "default": {
+        "ENGINE": f"django.db.backends.{ENGINE}",
+        "NAME": os.getenv("DATABASE_NAME", BASE_DIR / "db.sqlite3" if ENGINE == "sqlite3" else ""),
+        "USER": os.getenv("DATABASE_USERNAME", ""),
+        "PASSWORD": os.getenv("DATABASE_PASSWORD", ""),
+        "HOST": os.getenv("DATABASE_HOST", ""),
+        "PORT": os.getenv("DATABASE_PORT", ""),
     }
 }
 
