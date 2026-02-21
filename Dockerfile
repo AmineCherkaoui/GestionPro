@@ -57,6 +57,7 @@ RUN chown -R www-data:www-data /var/log/apache2 && chmod -R 755 /var/log/apache2
 RUN chown -R www-data:www-data /usr/share/fonts && chmod -R 755 /usr/share/fonts
 
 # Fix entrypoint path and permissions
+RUN sed -i 's/\r$//' /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 
 # Add ServerName to suppress warning
